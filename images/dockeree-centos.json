@@ -1,0 +1,59 @@
+{
+  "variables": {
+    "aws_region": "us-east-1"
+  },
+  "builders":
+  [
+    {
+      "name": "dockeree-ami",
+      "ami_name": "docker-centos7-{{isotime | clean_ami_name}}",
+      "ami_description": "An Amazon Linux AMI that has Docker EE and dependencies installed.",
+      "instance_type": "t2.small",
+      "region": "{{user `aws_region`}}",
+      "type": "amazon-ebs",
+      "tags": {
+        "Name": "docker-ee"
+      },
+      "source_ami_filter": {
+        "filters": {
+          "virtualization-type": "hvm",
+          "architecture": "x86_64",
+          "name": "CentOS Linux 7*",
+          "root-device-type": "ebs"
+        },
+        "owners": ["679593333241"],
+        "most_recent": true
+      },
+      "ssh_username": "centos"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": [
+        "sudo yum update -y",
+        "sudo yum makecache fast",
+        "sudo yum -y install device-mapper device-mapper-libs libtalloc libtdb libtevent systemd-libs",
+        "sudo yum -y update device-mapper device-mapper-libs libtalloc libtdb libtevent systemd-libs",
+        "sudo yum -y install yum-utils device-mapper-persistent-data lvm2",
+        "sudo -E sh -c 'echo https://storebits.docker.com/ee/centos/sub-cee6347f-1de9-4e4b-a14c-f035d2e81cce/centos > /etc/yum/vars/dockerurl'",
+        "sudo -E yum-config-manager --add-repo 'https://storebits.docker.com/ee/centos/sub-cee6347f-1de9-4e4b-a14c-f035d2e81cce/centos/docker-ee.repo'",
+        "sudo yum -y install docker-ee",
+        "sudo mkdir /etc/docker"
+      ]
+    },
+    {
+      "type": "file",
+      "source": "daemon.tpl",
+      "destination": "/tmp/daemon.json"
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "sudo mv /tmp/daemon.json /etc/docker/",
+        "sudo systemctl enable docker",
+        "sudo systemctl start docker"
+      ]
+    }
+  ]
+}
