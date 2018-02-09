@@ -1,6 +1,7 @@
 {
   "variables": {
-    "aws_region": "us-east-1"
+    "aws_region": "us-east-1",
+    "docker_ucp_ver": "2.2.5"
   },
   "builders":
   [
@@ -33,9 +34,7 @@
       "inline": [
         "sudo yum update -y",
         "sudo yum makecache fast",
-        "sudo yum -y install device-mapper device-mapper-libs libtalloc libtdb libtevent systemd-libs",
-        "sudo yum -y update device-mapper device-mapper-libs libtalloc libtdb libtevent systemd-libs",
-        "sudo yum -y install yum-utils device-mapper-persistent-data lvm2",
+        "sudo yum -y install yum-utils",
         "sudo -E sh -c 'echo https://storebits.docker.com/ee/centos/sub-cee6347f-1de9-4e4b-a14c-f035d2e81cce/centos > /etc/yum/vars/dockerurl'",
         "sudo -E yum-config-manager --add-repo 'https://storebits.docker.com/ee/centos/sub-cee6347f-1de9-4e4b-a14c-f035d2e81cce/centos/docker-ee.repo'",
         "sudo yum -y install docker-ee",
@@ -52,7 +51,18 @@
       "inline": [
         "sudo mv /tmp/daemon.json /etc/docker/",
         "sudo systemctl enable docker",
-        "sudo systemctl start docker"
+        "sudo systemctl start docker",
+        "sudo docker image pull docker/ucp:{{user `docker_ucp_ver`}}",
+        "sudo docker image pull docker/ucp-agent:{{user `docker_ucp_ver`}}",
+        "sudo docker image pull docker/ucp-compose:{{user `docker_ucp_ver`}}",
+        "sudo docker image pull docker/ucp-controller:{{user `docker_ucp_ver`}}",
+        "sudo docker image pull docker/ucp-auth:{{user `docker_ucp_ver`}}",
+        "sudo docker image pull docker/ucp-swarm:{{user `docker_ucp_ver`}}",
+        "sudo docker image pull docker/ucp-etcd:{{user `docker_ucp_ver`}}",
+        "sudo docker image pull docker/ucp-hrm:{{user `docker_ucp_ver`}}",
+        "sudo docker image pull docker/ucp-metrics:{{user `docker_ucp_ver`}}",
+        "sudo docker image pull docker/ucp-dsinfo:{{user `docker_ucp_ver`}}",
+        "sudo docker image pull docker/ucp-auth-store:{{user `docker_ucp_ver`}}"
       ]
     }
   ]
