@@ -1,3 +1,6 @@
 {
-  "storage-driver": "devicemapper"
+    "storage-driver": "overlay2",
+    "storage-opts": [
+        "overlay2.override_kernel_check=true"
+    ]
 }
