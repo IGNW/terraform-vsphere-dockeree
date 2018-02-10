@@ -43,16 +43,6 @@ resource "aws_security_group_rule" "https_in" {
   security_group_id = "${aws_security_group.manager_external.id}"
 }
 
-resource "aws_security_group_rule" "egress_all" {
-  type        = "egress"
-  from_port   = 0
-  to_port     = 0
-  protocol    = "-1"
-  cidr_blocks = ["0.0.0.0/0"]
-
-  security_group_id = "${aws_security_group.manager_external.id}"
-}
-
 #===========================================================================
 resource "aws_security_group" "manager_internal" {
   description = "Rules for communication between managers"
@@ -70,7 +60,7 @@ resource "aws_security_group_rule" "swarm_manager" {
   protocol = "tcp"
    from_port = 2376
   to_port = 2376
-  cidr_blocks = ["${var.public_subnets_cidr}"]
+  cidr_blocks = ["${var.public_subnets_cidr}", "${var.private_subnets_cidr}"]
 
   security_group_id = "${aws_security_group.manager_internal.id}"
 }
@@ -81,7 +71,7 @@ resource "aws_security_group_rule" "node_configuration" {
   protocol = "tcp"
   from_port = 12379
   to_port = 12380
-  cidr_blocks = ["${var.public_subnets_cidr}"]
+  cidr_blocks = ["${var.public_subnets_cidr}", "${var.private_subnets_cidr}"]
 
   security_group_id = "${aws_security_group.manager_internal.id}"
 }
@@ -92,7 +82,7 @@ resource "aws_security_group_rule" "ca" {
   protocol = "tcp"
   from_port = 12381
   to_port = 12381
-  cidr_blocks = ["${var.public_subnets_cidr}"]
+  cidr_blocks = ["${var.public_subnets_cidr}", "${var.private_subnets_cidr}"]
 
   security_group_id = "${aws_security_group.manager_internal.id}"
 }
@@ -103,7 +93,7 @@ resource "aws_security_group_rule" "ucp_ca" {
   protocol = "tcp"
   from_port = 12382
   to_port = 12382
-  cidr_blocks = ["${var.public_subnets_cidr}"]
+  cidr_blocks = ["${var.public_subnets_cidr}", "${var.private_subnets_cidr}"]
 
   security_group_id = "${aws_security_group.manager_internal.id}"
 }
@@ -114,7 +104,7 @@ resource "aws_security_group_rule" "auth_storage_backend" {
   protocol = "tcp"
   from_port = 12383
   to_port = 12383
-  cidr_blocks = ["${var.public_subnets_cidr}"]
+  cidr_blocks = ["${var.public_subnets_cidr}", "${var.private_subnets_cidr}"]
 
   security_group_id = "${aws_security_group.manager_internal.id}"
 }
@@ -126,7 +116,7 @@ resource "aws_security_group_rule" "auth_storage_backend_replication" {
   protocol = "tcp"
   from_port = 12384
   to_port = 12384
-  cidr_blocks = ["${var.public_subnets_cidr}"]
+  cidr_blocks = ["${var.public_subnets_cidr}", "${var.private_subnets_cidr}"]
 
   security_group_id = "${aws_security_group.manager_internal.id}"
 }
@@ -138,7 +128,7 @@ resource "aws_security_group_rule" "auth_service_api" {
   protocol = "tcp"
   from_port = 12385
   to_port = 12385
-  cidr_blocks = ["${var.public_subnets_cidr}"]
+  cidr_blocks = ["${var.public_subnets_cidr}", "${var.private_subnets_cidr}"]
 
   security_group_id = "${aws_security_group.manager_internal.id}"
 }
@@ -150,7 +140,7 @@ resource "aws_security_group_rule" "auth_worker" {
   protocol = "tcp"
   from_port = 12386
   to_port = 12386
-  cidr_blocks = ["${var.public_subnets_cidr}"]
+  cidr_blocks = ["${var.public_subnets_cidr}", "${var.private_subnets_cidr}"]
 
   security_group_id = "${aws_security_group.manager_internal.id}"
 }
@@ -162,7 +152,7 @@ resource "aws_security_group_rule" "metrics_service" {
   protocol = "tcp"
   from_port = 12387
   to_port = 12387
-  cidr_blocks = ["${var.public_subnets_cidr}"]
+  cidr_blocks = ["${var.public_subnets_cidr}", "${var.private_subnets_cidr}"]
 
   security_group_id = "${aws_security_group.manager_internal.id}"
 }
@@ -174,19 +164,19 @@ resource "aws_security_group" "worker_internal" {
   vpc_id = "${var.vpc_id}"
 
   tags {
-    Name = "dockeree_swarm_common_${var.environment}"
+    Name = "dockeree_worker_internal_${var.environment}"
   }
 }
 
-resource "aws_security_group_rule" "egress_swarm" {
-  description = "Port for communication between swarm nodes"
-  type = "egress"
+resource "aws_security_group_rule" "worker_ssh_in" {
+  description = "SSH"
+  type = "ingress"
   protocol = "tcp"
-  from_port = 2377
-  to_port = 2377
+  from_port = 22
+  to_port = 22
   cidr_blocks = ["${var.public_subnets_cidr}", "${var.private_subnets_cidr}"]
 
-  security_group_id = "${aws_security_group.swarm_common.id}"
+  security_group_id = "${aws_security_group.worker_internal.id}"
 }
 
 #===========================================================================
@@ -198,6 +188,16 @@ resource "aws_security_group" "swarm_common" {
   tags {
     Name = "dockeree_swarm_common_${var.environment}"
   }
+}
+
+resource "aws_security_group_rule" "egress_all" {
+  type        = "egress"
+  from_port   = 0
+  to_port     = 0
+  protocol    = "-1"
+  cidr_blocks = ["0.0.0.0/0"]
+
+  security_group_id = "${aws_security_group.swarm_common.id}"
 }
 
 resource "aws_security_group_rule" "ucp_api" {
@@ -233,17 +233,6 @@ resource "aws_security_group_rule" "ingress_overlay_networking" {
   security_group_id = "${aws_security_group.swarm_common.id}"
 }
 
-resource "aws_security_group_rule" "egress_overlay_networking" {
-  description = "Port for overlay networking"
-  type = "egress"
-  protocol = "udp"
-  from_port = 4789
-  to_port = 4789
-  cidr_blocks = ["${var.public_subnets_cidr}", "${var.private_subnets_cidr}"]
-
-  security_group_id = "${aws_security_group.swarm_common.id}"
-}
-
 resource "aws_security_group_rule" "ingress_gossip_tcp" {
   description = "Port for gossip-based clustering"
   type = "ingress"
@@ -258,28 +247,6 @@ resource "aws_security_group_rule" "ingress_gossip_tcp" {
 resource "aws_security_group_rule" "ingress_gossip_udp" {
   description = "Port for gossip-based clustering"
   type = "ingress"
-  protocol = "udp"
-  from_port = 7946
-  to_port = 7946
-  cidr_blocks = ["${var.public_subnets_cidr}", "${var.private_subnets_cidr}"]
-
-  security_group_id = "${aws_security_group.swarm_common.id}"
-}
-
-resource "aws_security_group_rule" "egress_gossip_tcp" {
-  description = "Port for gossip-based clustering"
-  type = "egress"
-  protocol = "tcp"
-  from_port = 7946
-  to_port = 7946
-  cidr_blocks = ["${var.public_subnets_cidr}", "${var.private_subnets_cidr}"]
-
-  security_group_id = "${aws_security_group.swarm_common.id}"
-}
-
-resource "aws_security_group_rule" "egress_gossip_udp" {
-  description = "Port for gossip-based clustering"
-  type = "egress"
   protocol = "udp"
   from_port = 7946
   to_port = 7946
