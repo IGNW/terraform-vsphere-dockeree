@@ -79,3 +79,25 @@ variable "ucp_admin_password" {
   description = "Password for the UCP administrator, used for the GUI login"
   default = "ucpw123!"
 }
+
+variable "minio_instance_type" {
+  default = "t2.micro"
+}
+
+variable "minio_storage_size" {
+  description = "Size in GB for Minio storage"
+  default = 100
+}
+
+variable "minio_endpoint" {
+  description = "Optional Minio endpoint address for the DTR storage backend. Example:  10.0.0.65:9000"
+  default = ""
+}
+
+variable "minio_access_key" {
+  default = "(Optional) Minio access key for the DTR storage backend."
+}
+
+variable "minio_secret_key" {
+  default = "(Optional) Minio secret key for the DTR storage backend."
+}

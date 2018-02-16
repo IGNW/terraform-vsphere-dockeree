@@ -178,6 +178,49 @@ resource "aws_security_group_rule" "worker_ssh_in" {
 
   security_group_id = "${aws_security_group.worker_internal.id}"
 }
+#===========================================================================
+resource "aws_security_group" "minio" {
+  description = "Rules for the Minio storage service"
+  name_prefix = "docker_minio_${var.environment}"
+  vpc_id = "${var.vpc_id}"
+
+  tags {
+    Name = "docker_minio_${var.environment}"
+  }
+}
+
+resource "aws_security_group_rule" "minio_egress_all" {
+  type        = "egress"
+  from_port   = 0
+  to_port     = 0
+  protocol    = "-1"
+  cidr_blocks = ["0.0.0.0/0"]
+
+  security_group_id = "${aws_security_group.minio.id}"
+}
+
+resource "aws_security_group_rule" "minio_ssh" {
+  description = "Allow SSH connections for provisioning from a bastion host"
+  type = "ingress"
+  protocol = "tcp"
+  from_port = 22
+  to_port = 22
+  cidr_blocks = ["${var.public_subnets_cidr}"]
+
+  security_group_id = "${aws_security_group.minio.id}"
+}
+
+resource "aws_security_group_rule" "minio" {
+  description = "Allow DTRs to access Minio on the standard port"
+  type = "ingress"
+  protocol = "tcp"
+  from_port = 9000
+  to_port = 9000
+  cidr_blocks = ["${var.public_subnets_cidr}"]
+
+  security_group_id = "${aws_security_group.minio.id}"
+}
+
 
 #===========================================================================
 resource "aws_security_group" "swarm_common" {
