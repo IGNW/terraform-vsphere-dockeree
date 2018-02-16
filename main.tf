@@ -39,6 +39,31 @@ data "aws_ami" "dockeree" {
   }
 }
 
+data "aws_ami" "amazon_linux" {
+  owners  = ["amazon"]
+  most_recent      = true
+
+  filter {
+    name   = "architecture"
+    values = ["x86_64"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  filter {
+    name = "root-device-type"
+    values = ["ebs"]
+  }
+
+  filter {
+    name   = "name"
+    values = ["*amzn-ami-hvm-*"]
+  }
+}
+
 module "security-group-rules" {
   source = "modules/dockeree-security-group-rules"
 
@@ -116,6 +141,23 @@ module "docker-worker" {
 
   join_token              = "${lookup(data.external.get_join_tokens.result, "worker_token")}"
   join_address            = "${module.docker-master.master_private_ip}"
+}
+
+module "minio" {
+  source                  = "modules/docker-minio"
+
+  bastion_host            = "${module.docker-master.master_public_ip}"
+  ssh_key_name            = "${var.ssh_key_name}"
+  ssh_key_path            = "${var.ssh_key_path}"
+  environment             = "${var.environment}"
+  ami_id                  = "${data.aws_ami.amazon_linux.id}"
+
+  instance_type           = "${var.minio_instance_type}"
+  subnet_ids              = "${module.vpc.private_subnets}"
+  vpc_security_group_ids  = ["${module.security-group-rules.minio_id}"]
+
+  minio_endpoint          = "${var.minio_endpoint}"
+  minio_storage_size      = "${var.minio_storage_size}"
 }
 
 # TODO: Create load balancer with master nodes behind it
