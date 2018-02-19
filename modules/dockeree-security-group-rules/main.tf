@@ -179,6 +179,50 @@ resource "aws_security_group_rule" "worker_ssh_in" {
   security_group_id = "${aws_security_group.worker_internal.id}"
 }
 #===========================================================================
+resource "aws_security_group" "dtr" {
+  description = "Rules for the Docker Trusted Registry nodes"
+  name_prefix = "dockeree_mgr_ext_${var.environment}"
+  vpc_id = "${var.vpc_id}"
+
+  tags {
+    Name = "dockeree_dtr_${var.environment}"
+  }
+}
+
+resource "aws_security_group_rule" "dtr_ssh_in" {
+  description = "SSH"
+  type = "ingress"
+  protocol = "tcp"
+  from_port = 22
+  to_port = 22
+  cidr_blocks = ["0.0.0.0/0"]
+
+  security_group_id = "${aws_security_group.dtr.id}"
+}
+
+resource "aws_security_group_rule" "dtr_http_in" {
+  description = "HTTPS"
+  type = "ingress"
+  protocol = "tcp"
+  from_port = 80
+  to_port = 80
+  cidr_blocks = ["0.0.0.0/0"]
+
+  security_group_id = "${aws_security_group.dtr.id}"
+}
+
+resource "aws_security_group_rule" "dtr_https_in" {
+  description = "HTTPS"
+  type = "ingress"
+  protocol = "tcp"
+  from_port = 443
+  to_port = 443
+  cidr_blocks = ["0.0.0.0/0"]
+
+  security_group_id = "${aws_security_group.dtr.id}"
+}
+
+#===========================================================================
 resource "aws_security_group" "minio" {
   description = "Rules for the Minio storage service"
   name_prefix = "docker_minio_${var.environment}"
@@ -308,3 +352,58 @@ resource "aws_security_group_rule" "tls_proxy" {
 
   security_group_id = "${aws_security_group.swarm_common.id}"
 }
+
+resource "aws_security_group_rule" "consul_server_rpc" {
+  description = "This is used by servers to handle incoming requests from other agents."
+  type = "ingress"
+  protocol = "tcp"
+  from_port = 8300
+  to_port = 8300
+  cidr_blocks = ["${var.public_subnets_cidr}", "${var.private_subnets_cidr}"]
+
+  security_group_id = "${aws_security_group.swarm_common.id}"
+}
+
+resource "aws_security_group_rule" "consul_serf_lan_tcp" {
+  description = "This is used to handle gossip in the LAN. Required by all agents."
+  type = "ingress"
+  protocol = "tcp"
+  from_port = 8301
+  to_port = 8301
+  cidr_blocks = ["${var.public_subnets_cidr}", "${var.private_subnets_cidr}"]
+
+  security_group_id = "${aws_security_group.swarm_common.id}"
+}
+
+resource "aws_security_group_rule" "consul_serf_lan_udp" {
+  description = "This is used to handle gossip in the LAN. Required by all agents."
+  type = "ingress"
+  protocol = "udp"
+  from_port = 8301
+  to_port = 8301
+  cidr_blocks = ["${var.public_subnets_cidr}", "${var.private_subnets_cidr}"]
+
+  security_group_id = "${aws_security_group.swarm_common.id}"
+}
+
+//resource "aws_security_group_rule" "consul_serf_wan_tcp" {
+//  description = "This is used by servers to gossip over the WAN to other servers"
+//  type = "ingress"
+//  protocol = "tcp"
+//  from_port = 8302
+//  to_port = 8302
+//  cidr_blocks = ["0.0.0.0/0"]
+//
+//  security_group_id = "${aws_security_group.swarm_common.id}"
+//}
+//
+//resource "aws_security_group_rule" "consul_serf_wan_udp" {
+//  description = "This is used by servers to gossip over the WAN to other servers"
+//  type = "ingress"
+//  protocol = "udp"
+//  from_port = 8302
+//  to_port = 8302
+//  cidr_blocks = ["0.0.0.0/0"]
+//
+//  security_group_id = "${aws_security_group.swarm_common.id}"
+//}
