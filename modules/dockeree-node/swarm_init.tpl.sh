@@ -113,12 +113,15 @@ function dtr_install {
     REPLICA_ID=$(od -vN 6 -An -tx1 /dev/urandom | tr -d " \n")
     echo "a using random replica ID:$REPLICA_ID"
     docker run -it --rm docker/dtr install \
-      --ucp-node $HOSTNAME \
-      --ucp-username '${ucp_admin_username}' \
-      --ucp-password '${ucp_admin_password}' \
-      --ucp-insecure-tls \
-      --replica-id $REPLICA_ID \
-      --ucp-url https://$MGR_IP
+        --ucp-node $HOSTNAME \
+        --ucp-username '${ucp_admin_username}' \
+        --ucp-password '${ucp_admin_password}' \
+        --ucp-insecure-tls \
+        --replica-id $REPLICA_ID \
+        --ucp-url https://$MGR_IP
+
+    echo "Applying Minio config"
+    /tmp/config_dtr_minio.sh
 
     curl -sX PUT -d "$REPLICA_ID" $API_BASE/kv/dtr/replica_id
     curl -sX PUT -d "$HOSTNAME.node.consul" "$API_BASE/kv/dtr_swarm_initialized?release=$SID&flags=2"
@@ -140,12 +143,12 @@ function dtr_join {
     echo "Acquired DTR join lock"
 
     docker run -it --rm docker/dtr join \
-      --ucp-node $HOSTNAME \
-      --ucp-username '${ucp_admin_username}' \
-      --ucp-password '${ucp_admin_password}' \
-      --existing-replica-id $REPLICA_ID \
-      --ucp-insecure-tls \
-      --ucp-url https://$MGR_IP
+        --ucp-node $HOSTNAME \
+        --ucp-username '${ucp_admin_username}' \
+        --ucp-password '${ucp_admin_password}' \
+        --existing-replica-id $REPLICA_ID \
+        --ucp-insecure-tls \
+        --ucp-url https://$MGR_IP
 
     echo "Releasing DTR join lock."
     curl -sX PUT $API_BASE/kv/dtr/join_lock?release=$SID

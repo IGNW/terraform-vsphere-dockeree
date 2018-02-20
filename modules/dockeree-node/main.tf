@@ -12,6 +12,15 @@ data "template_file" "swarm_init" {
     consul_secret       = "${var.consul_secret}"
     ucp_admin_username  = "${var.ucp_admin_username}"
     ucp_admin_password  = "${var.ucp_admin_password}"
+  }
+}
+
+data "template_file" "config_dtr_minio" {
+  template = "${file("${path.module}/config_dtr_minio.tpl.py")}"
+
+  vars {
+    ucp_admin_username  = "${var.ucp_admin_username}"
+    ucp_admin_password  = "${var.ucp_admin_password}"
     minio_endpoint      = "${var.minio_endpoint}"
     minio_access_key    = "${var.minio_access_key}"
     minio_secret_key    = "${var.minio_secret_key}"
@@ -55,7 +64,18 @@ resource "aws_instance" "dockeree" {
     destination = "/tmp/swarm_init.sh"
   }
 
-  # Set the node hostname
+  provisioner "file" {
+    connection = {
+      type          = "ssh"
+      user          = "centos"
+      private_key   = "${file(var.ssh_key_path)}"
+      bastion_host  = "${var.bastion_host}"
+    }
+
+    content     = "${data.template_file.config_dtr_minio.rendered}"
+    destination = "/tmp/config_dtr_minio.sh"
+  }
+
   provisioner "remote-exec" {
     connection = {
       type          = "ssh"
@@ -71,7 +91,7 @@ echo "127.0.0.1 $NODE_NAME" | sudo tee --append /etc/hosts
 sudo hostnamectl set-hostname $NODE_NAME
 echo "${var.node_count}" > /tmp/node_count
 
-chmod +x /tmp/swarm_init.sh
+chmod +x /tmp/swarm_init.sh /tmp/config_dtr_minio.sh
 sudo /tmp/swarm_init.sh
 EOT
     ]
