@@ -176,7 +176,7 @@ module "docker-dtr" {
   ucp_admin_username      = "${var.ucp_admin_username}"
   ucp_admin_password      = "${var.ucp_admin_password}"
 
-  minio_endpoint          = "${var.minio_endpoint != "" ? var.minio_endpoint : module.minio.private_ip}"
+  minio_endpoint          = "${var.minio_endpoint != "" ? var.minio_endpoint : module.minio.minio_endpoint}"
   minio_access_key        = "${var.minio_access_key != "" ? var.minio_access_key : module.minio.access_key}"
   minio_secret_key        = "${var.minio_secret_key != "" ? var.minio_secret_key : module.minio.secret_key}"
 

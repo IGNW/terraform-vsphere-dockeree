@@ -29,13 +29,18 @@ storage_config = {
            'skipverify': False}}
 
 jar = r.cookies
-hdr = {'X-Csrf-Token': jar['csrftoken']}
+hdr = {
+    'referer': base_url+'/admin/settings/storage',
+    'X-Csrf-Token': jar['csrftoken']
+}
 r = requests.put(registry_url, json={'storage': storage_config},
                  headers=hdr, cookies=jar, verify=False)
 
+requests.get(logout_url, cookies=jar, verify=False)
+
 if r.status_code != 202:
     print("Error: Uploading config gave status code: " + str(r.status_code))
+    print(r.text)
     exit()
 
-requests.get(logout_url, cookies=jar, verify=False)
 print("Applied Minio storage configuration to DTR.")

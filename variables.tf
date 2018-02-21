@@ -105,14 +105,16 @@ variable "minio_storage_size" {
 }
 
 variable "minio_endpoint" {
-  description = "Optional Minio endpoint address for the DTR storage backend. Example:  10.0.0.65:9000"
+  description = "(Optional) Minio endpoint address for the DTR storage backend. Example:  10.0.0.65:9000"
   default = ""
 }
 
 variable "minio_access_key" {
-  default = "(Optional) Minio access key for the DTR storage backend."
+  description = "(Optional) Minio access key for the DTR storage backend. Used only if minio_endpoint is not empty."
+  default = ""
 }
 
 variable "minio_secret_key" {
-  default = "(Optional) Minio secret key for the DTR storage backend."
+  description = "(Optional) Minio secret key for the DTR storage backend. Used only if minio_endpoint is not empty."
+  default = ""
 }
