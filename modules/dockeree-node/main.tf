@@ -12,6 +12,8 @@ data "template_file" "swarm_init" {
     consul_secret       = "${var.consul_secret}"
     ucp_admin_username  = "${var.ucp_admin_username}"
     ucp_admin_password  = "${var.ucp_admin_password}"
+    ucp_dns_name        = "${var.ucp_dns_name}"
+    dtr_dns_name        = "${var.dtr_dns_name}"
   }
 }
 

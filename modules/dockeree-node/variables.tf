@@ -65,6 +65,16 @@ variable "ucp_admin_password" {
   default = ""
 }
 
+variable "ucp_dns_name" {
+  description = "DNS name for the load balancer in front of the UCP manager."
+  default     = ""
+}
+
+variable "dtr_dns_name" {
+  description = "DNS name for the load balancer in front of the DTR nodes."
+  default     = ""
+}
+
 variable "minio_endpoint" {
   default = ""
 }

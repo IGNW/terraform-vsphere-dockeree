@@ -118,3 +118,15 @@ variable "minio_secret_key" {
   description = "(Optional) Minio secret key for the DTR storage backend. Used only if minio_endpoint is not empty."
   default = ""
 }
+
+variable "dns_zone" {
+  description = "Zone managed by Amazon Route 53 to be used for the load balancers' DNS name"
+}
+
+variable "ucp_dns_name" {
+  description = "DNS name for the load balancer in front of the UCP manager."
+}
+
+variable "dtr_dns_name" {
+  description = "DNS name for the load balancer in front of the DTR nodes."
+}

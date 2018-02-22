@@ -61,7 +61,8 @@ function create_ucp_swarm {
         docker/ucp:2.2.5 install \
         --host-address eth0 \
         --admin-username ${ucp_admin_username} \
-        --admin-password ${ucp_admin_password}
+        --admin-password ${ucp_admin_password} \
+        --san ${ucp_dns_name}
 
     echo "Storing manager/worker join tokens for UCP"
     MANAGER_TOKEN=$(docker swarm join-token -q manager)
@@ -108,17 +109,22 @@ function swarm_wait_until_ready {
 
 function dtr_install {
     wait_for_ucp_manager
-    MGR_IP=$(dig +short ucpmgr.service.consul | head -1 | tr -d " \n")
     echo "Starting DTR install"
     REPLICA_ID=$(od -vN 6 -An -tx1 /dev/urandom | tr -d " \n")
     echo "a using random replica ID:$REPLICA_ID"
+
+    # Add a hosts entry so that this works before the load balancer is up
+    MGR_IP=$(dig +short ucpmgr.service.consul | head -1 | tr -d " \n")
+    echo "$MGR_IP ${ucp_dns_name}" >> /etc/hosts
+
     docker run -it --rm docker/dtr install \
         --ucp-node $HOSTNAME \
         --ucp-username '${ucp_admin_username}' \
         --ucp-password '${ucp_admin_password}' \
         --ucp-insecure-tls \
         --replica-id $REPLICA_ID \
-        --ucp-url https://$MGR_IP
+        --ucp-url https://${ucp_dns_name} \
+        --dtr-external-url https://${dtr_dns_name}
 
     echo "Applying Minio config"
     /tmp/config_dtr_minio.sh
@@ -130,7 +136,6 @@ function dtr_install {
 
 function dtr_join {
     wait_for_ucp_manager
-    MGR_IP=$(dig +short ucpmgr.service.consul | head -1 | tr -d " \n")
     echo "Starting DTR join"
     REPLICA_ID=$(curl -s $API_BASE/kv/dtr/replica_id | jq -r '.[0].Value' | base64 -d)
     echo "Retreived replace ID: $REPLICA_ID"
@@ -142,13 +147,17 @@ function dtr_join {
     done
     echo "Acquired DTR join lock"
 
+    # Add a hosts entry so that this works before the load balancer is up
+    MGR_IP=$(dig +short ucpmgr.service.consul | head -1 | tr -d " \n")
+    echo "$MGR_IP ${ucp_dns_name}" >> /etc/hosts
+
     docker run -it --rm docker/dtr join \
         --ucp-node $HOSTNAME \
         --ucp-username '${ucp_admin_username}' \
         --ucp-password '${ucp_admin_password}' \
         --existing-replica-id $REPLICA_ID \
         --ucp-insecure-tls \
-        --ucp-url https://$MGR_IP
+        --ucp-url https://${ucp_dns_name}
 
     echo "Releasing DTR join lock."
     curl -sX PUT $API_BASE/kv/dtr/join_lock?release=$SID
