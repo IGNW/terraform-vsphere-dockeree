@@ -7,7 +7,7 @@
   [
     {
       "name": "dockeree-ami",
-      "ami_name": "docker-centos7-{{isotime | clean_ami_name}}",
+      "ami_name": "dockeree-centos7-{{isotime | clean_ami_name}}",
       "ami_description": "An Amazon Linux AMI that has Docker EE and dependencies installed.",
       "instance_type": "t2.small",
       "region": "{{user `aws_region`}}",
@@ -34,7 +34,13 @@
       "inline": [
         "sudo yum update -y",
         "sudo yum makecache fast",
-        "sudo yum -y install yum-utils",
+        "sudo yum -y install yum-utils chrony dnsmasq bind-utils epel-release",
+        "sudo yum -y install jq",
+        "sudo systemctl enable dnsmasq",
+        "echo 'server=/consul/127.0.0.1#8600' | sudo tee /etc/dnsmasq.d/10-consul",
+        "echo 'prepend domain-name-servers 127.0.0.1;' | sudo tee --append /etc/dhcp/dhclient.conf",
+        "echo 'prepend domain-search \"consul\", \"node.consul\";' | sudo tee --append /etc/dhcp/dhclient.conf",
+        "echo 'server 169.254.169.123 prefer iburst' | sudo tee --append /etc/chrony.conf",
         "sudo -E sh -c 'echo https://storebits.docker.com/ee/centos/sub-cee6347f-1de9-4e4b-a14c-f035d2e81cce/centos > /etc/yum/vars/dockerurl'",
         "sudo -E yum-config-manager --add-repo 'https://storebits.docker.com/ee/centos/sub-cee6347f-1de9-4e4b-a14c-f035d2e81cce/centos/docker-ee.repo'",
         "sudo yum -y install docker-ee",
@@ -54,6 +60,7 @@
         "sudo systemctl start docker",
         "sudo docker image pull docker/ucp:{{user `docker_ucp_ver`}}",
         "sudo docker image pull docker/ucp-agent:{{user `docker_ucp_ver`}}",
+        "sudo docker image pull docker/ucp-cfssl:{{user `docker_ucp_ver`}}",
         "sudo docker image pull docker/ucp-compose:{{user `docker_ucp_ver`}}",
         "sudo docker image pull docker/ucp-controller:{{user `docker_ucp_ver`}}",
         "sudo docker image pull docker/ucp-auth:{{user `docker_ucp_ver`}}",
@@ -62,7 +69,9 @@
         "sudo docker image pull docker/ucp-hrm:{{user `docker_ucp_ver`}}",
         "sudo docker image pull docker/ucp-metrics:{{user `docker_ucp_ver`}}",
         "sudo docker image pull docker/ucp-dsinfo:{{user `docker_ucp_ver`}}",
-        "sudo docker image pull docker/ucp-auth-store:{{user `docker_ucp_ver`}}"
+        "sudo docker image pull docker/ucp-auth-store:{{user `docker_ucp_ver`}}",
+        "sudo docker image pull docker/dtr:latest",
+        "sudo docker image pull library/consul:latest"
       ]
     }
   ]

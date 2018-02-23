@@ -37,5 +37,5 @@ variable "minio_storage_size" {
 }
 
 variable "minio_endpoint" {
-  description = "Optional user-provided Minio endpoint address"
+  description = "Optional user-provided Minio endpoint address. Determines if we build our own or not."
 }

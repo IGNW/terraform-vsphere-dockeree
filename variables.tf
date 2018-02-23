@@ -7,7 +7,7 @@ variable "ssh_key_path" {
 }
 
 variable "environment" {
-  description = "Name to be used as a affix on resources"
+  description = "Name to be used as a affix on resource names"
   default     = "dev"
 }
 
@@ -29,20 +29,20 @@ variable "vpc_cidr" {
 }
 
 variable "public_subnets" {
-  description = "Internal networks for instances that will be exposed to public"
+  description = "Internal networks for instances that are exposed publicly."
   type        = "list"
   default     = ["10.0.0.0/25", "10.0.0.128/25"]
 }
 
 variable "private_subnets" {
-  description = "Internal networks for instances that aren't exposed to public"
+  description = "Internal networks for instances that aren't exposed publicly."
   type        = "list"
   default     = ["10.0.1.0/25", "10.0.1.128/25"]
 }
 
 variable "manager_instance_type" {
   description = "EC2 instance type to use for the manager nodes"
-  default = "t2.large"
+  default = "t2.medium"
 }
 
 variable "manager_node_count" {
@@ -62,11 +62,26 @@ variable "worker_instance_type" {
 
 variable "worker_node_count" {
   description = "Number of worker nodes to create."
-  default = 4
+  default = 3
 }
 
 variable "worker_root_volume_size" {
   description = "The size of the worker node's root volume in gigabytes."
+  default = 8
+}
+
+variable "dtr_instance_type" {
+  description = "EC2 instance type to use for Docker Trusted Registry nodes"
+  default = "t2.medium"
+}
+
+variable "dtr_node_count" {
+  description = "Number of DTR nodes to create. Should be an odd number."
+  default = 3
+}
+
+variable "dtr_root_volume_size" {
+  description = "The size of the DTR node's root volume in gigabytes. Not used for image storage."
   default = 8
 }
 
@@ -90,14 +105,16 @@ variable "minio_storage_size" {
 }
 
 variable "minio_endpoint" {
-  description = "Optional Minio endpoint address for the DTR storage backend. Example:  10.0.0.65:9000"
+  description = "(Optional) Minio endpoint address for the DTR storage backend. Example:  10.0.0.65:9000"
   default = ""
 }
 
 variable "minio_access_key" {
-  default = "(Optional) Minio access key for the DTR storage backend."
+  description = "(Optional) Minio access key for the DTR storage backend. Used only if minio_endpoint is not empty."
+  default = ""
 }
 
 variable "minio_secret_key" {
-  default = "(Optional) Minio secret key for the DTR storage backend."
+  description = "(Optional) Minio secret key for the DTR storage backend. Used only if minio_endpoint is not empty."
+  default = ""
 }

@@ -1,6 +1,7 @@
 locals {
-  name = "docker-minio-${var.environment}"
-  disk_dev = "/dev/xvdf"
+  name        = "docker-minio-${var.environment}"
+  disk_dev    = "/dev/xvdf"
+  minio_port  = 9000
 }
 
 data "template_file" "mount_ebs" {
@@ -79,7 +80,7 @@ chmod +x /tmp/mount_ebs.sh
 sudo /tmp/mount_ebs.sh || exit 1
 sudo mkdir /mnt/data/dtr
 
-sudo docker run -d -p 9000:9000 --name minio --restart unless-stopped \
+sudo docker run -d -p ${local.minio_port}:${local.minio_port} --name minio --restart unless-stopped \
   -e "MINIO_ACCESS_KEY=${random_string.minio_access_key.result}" \
   -e "MINIO_SECRET_KEY=${random_string.minio_secret_key.result}" \
   -e "MINIO_BROWSER=off" \

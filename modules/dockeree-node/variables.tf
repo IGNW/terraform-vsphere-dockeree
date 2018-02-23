@@ -6,13 +6,17 @@ variable "ssh_key_path" {
   description = "Local path to the SSH key matching the key name given above."
 }
 
-variable "basion_host" {
-  description = "(Optional) Host to connect to first before making the provisioning connection."
+variable "bastion_host" {
+  description = "Host to connect to first before making the provisioning connection."
   default = ""
 }
 
-variable "name_prefix" {
-  description = "Name to be used as a prefix on resource names."
+variable "environment" {
+  description = "Name to be used as a affix on resource names"
+}
+
+variable "node_type" {
+  description = "Short code indicating the role of this node."
 }
 
 variable "vpc_security_group_ids" {
@@ -37,18 +41,36 @@ variable "node_count" {
   description = "Number of nodes to create."
 }
 
-variable "count_offset" {
-  description = "Used to offset count.index to account for the master node."
-}
-
 variable "root_volume_size" {
   description = "The size of the root volume in gigabytes."
 }
 
-variable "join_token" {
-  description = "Token used in the swarm join command."
+variable "consul_secret" {
+  description = "The secret key to use for encryption of Consul network traffic"
+  type = "string"
 }
 
-variable "join_address" {
-  description = "IP address used in the swarm join command."
+variable "iam_profile_id" {
+  description = "Optional IAM Instance Profile ID to assign to these instances"
+  default = ""
+}
+
+variable "ucp_admin_username" {
+  description = "Username for the UCP administrator account."
+  default = ""
+}
+
+variable "ucp_admin_password" {
+  description = "Password for the UCP administrator acount."
+  default = ""
+}
+
+variable "minio_endpoint" {
+  default = ""
+}
+variable "minio_access_key" {
+  default = ""
+}
+variable "minio_secret_key" {
+  default = ""
 }
