@@ -5,3 +5,7 @@ output "public_ips" {
 output "private_ips" {
   value = ["${aws_instance.dockeree.*.private_ip}"]
 }
+
+output "instance_ids" {
+  value = "${aws_instance.dockeree.*.id}"
+}

@@ -116,6 +116,10 @@ resource "aws_iam_instance_profile" "consul_profile" {
   role = "${aws_iam_role.ec2_assume_role.name}"
 }
 
+resource "random_id" "consul_secret" {
+  byte_length = 16
+}
+
 module "docker-manager" {
   source                  = "modules/dockeree-node"
 
@@ -133,6 +137,7 @@ module "docker-manager" {
   iam_profile_id          = "${aws_iam_instance_profile.consul_profile.id}"
   ucp_admin_username      = "${var.ucp_admin_username}"
   ucp_admin_password      = "${var.ucp_admin_password}"
+  ucp_dns_name            = "${var.ucp_dns_name}"
 
   node_count              = "${var.manager_node_count}"
 }
@@ -175,6 +180,8 @@ module "docker-dtr" {
   iam_profile_id          = "${aws_iam_instance_profile.consul_profile.id}"
   ucp_admin_username      = "${var.ucp_admin_username}"
   ucp_admin_password      = "${var.ucp_admin_password}"
+  ucp_dns_name            = "${var.ucp_dns_name}"
+  dtr_dns_name            = "${var.dtr_dns_name}"
 
   minio_endpoint          = "${var.minio_endpoint != "" ? var.minio_endpoint : module.minio.minio_endpoint}"
   minio_access_key        = "${var.minio_access_key != "" ? var.minio_access_key : module.minio.access_key}"
@@ -200,8 +207,18 @@ module "minio" {
   minio_storage_size      = "${var.minio_storage_size}"
 }
 
-resource "random_id" "consul_secret" {
-  byte_length = 16
-}
+module "load-balancer" {
+  source = "modules/dockeree-lb"
 
+  environment           = "${var.environment}"
+  vpc_id                = "${module.vpc.vpc_id}"
+  dns_zone              = "${var.dns_zone}"
+  ucp_dns_name          = "${var.ucp_dns_name}"
+  dtr_dns_name          = "${var.dtr_dns_name}"
+  public_subnet_ids     = "${module.vpc.public_subnets}"
+  ucp_mgr_instance_ids  = "${module.docker-manager.instance_ids}"
+  ucp_node_count        = "${var.manager_node_count}"
+  dtr_instance_ids      = "${module.docker-dtr.instance_ids}"
+  dtr_node_count        = "${var.dtr_node_count}"
+}
 # TODO: Create load balancer with master nodes behind it
