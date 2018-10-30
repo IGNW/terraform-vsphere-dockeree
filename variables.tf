@@ -1,9 +1,33 @@
-variable "ssh_key_name" {
-  description = "Name of the EC2 Key Pair to be used for SSH."
+variable "vsphere_server" {
+  description = "Name of the vsphere server on which to provision vms"
 }
 
-variable "ssh_key_path" {
-  description = "Local path to the SSH key matching the key name given above."
+variable "vsphere_user" {
+  description = "vsphere user name"
+}
+
+variable "vsphere_password" {
+  description = "vsphere password for the account given above"
+}
+
+variable "vsphere_datacenter" {
+  description = "vSphere datacenter to connect to"
+}
+
+variable "vsphere_datastore" {
+  description = "vsphere datastore"
+}
+
+variable "vsphere_compute_cluster" {
+  description = "vSphere compute cluster to use"
+}
+
+variable "vsphere_network" {
+  description = "vSphere network to which to connect vms"
+}
+
+variable "domain" {
+  description = "Domain name"
 }
 
 variable "environment" {
@@ -11,38 +35,24 @@ variable "environment" {
   default     = "dev"
 }
 
-variable "aws_region" {
-  description = "The AWS region to deploy into (e.g. us-east-1)."
-  default     = "us-east-1"
+variable "vsphere_folder" {
+  description = "folder within vsphere to place vms"
+  default = "docker-ee"
 }
 
-variable "availability_zones" {
-  description = "Availability Zones, used to configure the VPC"
-  type = "list"
-  default = ["us-east-1a", "us-east-1b"]
+variable "manager_vm_template" {
+  description = "VM template to use for manager nodes"
+  default = "CentOS_7_Template"
 }
 
-variable "vpc_cidr" {
-  description = "Supernet for this VPC"
-  default     = "10.0.0.0/23"
-  type        = "string"
+variable "manager_vcpu" {
+  description = "Number of virtual CPUs for manager nodes"
+  default = 4
 }
 
-variable "public_subnets" {
-  description = "Internal networks for instances that are exposed publicly."
-  type        = "list"
-  default     = ["10.0.0.0/25", "10.0.0.128/25"]
-}
-
-variable "private_subnets" {
-  description = "Internal networks for instances that aren't exposed publicly."
-  type        = "list"
-  default     = ["10.0.1.0/25", "10.0.1.128/25"]
-}
-
-variable "manager_instance_type" {
-  description = "EC2 instance type to use for the manager nodes"
-  default = "t2.medium"
+variable "manager_memory_mb" {
+  description = "Memory (in MB) for manager nodes"
+  default = 4000
 }
 
 variable "manager_node_count" {
@@ -51,28 +61,33 @@ variable "manager_node_count" {
 }
 
 variable "manager_root_volume_size" {
-  description = "The size of the manager node's root volume in gigabytes."
-  default = 8
+  description = "The size of the manager nodes' root volume in gigabytes."
+  default = 80
 }
 
-variable "worker_instance_type" {
-  description = "EC2 instance type to use for the worker nodes"
-  default = "t2.medium"
+variable "worker_vm_template" {
+  description = "VM template to use for worker nodes"
+  default = "CentOS_7_Template"
+}
+
+variable "worker_vcpu" {
+  description = "Number of virtual CPUs for worker nodes"
+  default = 4
+}
+
+variable "worker_memory_mb" {
+  description = "Memory (in MB) for worker nodes"
+  default = 4000
 }
 
 variable "worker_node_count" {
   description = "Number of worker nodes to create."
-  default = 3
+  default = 4
 }
 
 variable "worker_root_volume_size" {
-  description = "The size of the worker node's root volume in gigabytes."
-  default = 8
-}
-
-variable "dtr_instance_type" {
-  description = "EC2 instance type to use for Docker Trusted Registry nodes"
-  default = "t2.medium"
+  description = "The size of the worker nodes' root volume in gigabytes."
+  default = 80
 }
 
 variable "dtr_node_count" {
@@ -80,9 +95,24 @@ variable "dtr_node_count" {
   default = 3
 }
 
+variable "dtr_vm_template" {
+  description = "VM template to use for DTR nodes"
+  default = "CentOS_7_Template"
+}
+
+variable "dtr_vcpu" {
+  description = "Number of virtual CPUs for DTR nodes"
+  default = 4
+}
+
+variable "dtr_memory_mb" {
+  description = "Memory (in MB) for DTR nodes"
+  default = 4000
+}
+
 variable "dtr_root_volume_size" {
-  description = "The size of the DTR node's root volume in gigabytes. Not used for image storage."
-  default = 8
+  description = "The size of the DTR nodes' root volume in gigabytes. Not used for image storage."
+  default = 16
 }
 
 variable "ucp_admin_username" {
@@ -93,10 +123,6 @@ variable "ucp_admin_username" {
 variable "ucp_admin_password" {
   description = "Password for the UCP administrator, used for the GUI login"
   default = "ucpw123!"
-}
-
-variable "minio_instance_type" {
-  default = "t2.micro"
 }
 
 variable "minio_storage_size" {
@@ -117,16 +143,4 @@ variable "minio_access_key" {
 variable "minio_secret_key" {
   description = "(Optional) Minio secret key for the DTR storage backend. Used only if minio_endpoint is not empty."
   default = ""
-}
-
-variable "dns_zone" {
-  description = "Zone managed by Amazon Route 53 to be used for the load balancers' DNS name"
-}
-
-variable "ucp_dns_name" {
-  description = "DNS name for the load balancer in front of the UCP manager."
-}
-
-variable "dtr_dns_name" {
-  description = "DNS name for the load balancer in front of the DTR nodes."
 }

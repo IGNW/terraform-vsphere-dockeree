@@ -1,11 +1,3 @@
-variable "ssh_key_name" {
-  description = "Name of the EC2 Key Pair to be used for SSH."
-}
-
-variable "ssh_key_path" {
-  description = "Local path to the SSH key matching the key name given above."
-}
-
 variable "bastion_host" {
   description = "Host to connect to first before making the provisioning connection."
   default = ""
@@ -19,22 +11,16 @@ variable "node_type" {
   description = "Short code indicating the role of this node."
 }
 
-variable "vpc_security_group_ids" {
-  description = "A list of security group IDs to associate with."
-  type = "list"
+variable "domain" {
+  description = "Domain name"
 }
 
-variable "subnet_ids" {
-  description = "The VPC subnet IDs to launch instances in."
-  type = "list"
+variable "node_vcpu" {
+  description = "Virtual CPUs to configure for this node"
 }
 
-variable "ami_id" {
-  description = "Amazon Machine Image ID to use for creating EC2 instances."
-}
-
-variable "instance_type" {
-  description = "EC2 instance type to use for this node."
+variable "node_memory" {
+  description = "Memory in MB to configure for this node"
 }
 
 variable "node_count" {
@@ -45,14 +31,33 @@ variable "root_volume_size" {
   description = "The size of the root volume in gigabytes."
 }
 
+variable "vsphere_datastore" {
+  description = "vSphere datastore to use for vms"
+}
+
+variable "vsphere_compute_cluster" {
+  description = "vSphere compute cluster on which to run vms"
+}
+
+variable "disk_template" {
+  description = "vSphere disk to use as a template"
+}
+
+variable "vsphere_network" {
+  description = ""
+}
+
+variable "vsphere_folder" {
+  description = "vSphere folder in which to place vms"
+}
+
+variable "vsphere_datacenter" {
+  description = ""
+}
+
 variable "consul_secret" {
   description = "The secret key to use for encryption of Consul network traffic"
   type = "string"
-}
-
-variable "iam_profile_id" {
-  description = "Optional IAM Instance Profile ID to assign to these instances"
-  default = ""
 }
 
 variable "ucp_admin_username" {

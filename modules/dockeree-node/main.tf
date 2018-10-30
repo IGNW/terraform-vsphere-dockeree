@@ -29,73 +29,86 @@ data "template_file" "config_dtr_minio" {
   }
 }
 
-resource "aws_instance" "dockeree" {
+data "vsphere_datacenter" "dc" {
+  name = "${var.vsphere_datacenter}"
+}
+
+data "vsphere_datastore" "datastore" {
+  name          = "${var.vsphere_datastore}"
+  datacenter_id = "${data.vsphere_datacenter.dc.id}"
+}
+
+data "vsphere_compute_cluster" "cluster" {
+  name          = "${var.vsphere_compute_cluster}"
+  datacenter_id = "${data.vsphere_datacenter.dc.id}"
+}
+
+data "vsphere_network" "network" {
+  name          = "${var.vsphere_network}"
+  datacenter_id = "${data.vsphere_datacenter.dc.id}"
+}
+
+data "vsphere_virtual_machine" "template" {
+  name          = "${var.disk_template}"
+  datacenter_id = "${data.vsphere_datacenter.dc.id}"
+}
+
+#resource "vsphere_tag_category" "name" {
+#    name = "Name"
+#    cardinality = "SINGLE"
+#    associable_types = ["VirtualMachine"]
+#}
+
+#resource "vsphere_tag_category" "role" {
+#    name = "Role"
+#    cardinality = "SINGLE"
+#    associable_types = ["VirtualMachine"]
+#}
+
+#resource "vsphere_tag" "name" {
+#  name = "${local.hostname_prefix}-${count.index}"
+#  category_id = "${vsphere_tag_category.name.id}"
+#}
+
+#resource "vsphere_tag" "role" {
+#  name = "${local.name_prefix}"
+#  category_id = "${vsphere_tag_category.name.id}"
+#}
+
+resource "vsphere_virtual_machine" "dockeree" {
   count                   = "${var.node_count}"
 
-  ami                     = "${var.ami_id}"
-  instance_type           = "${var.instance_type}"
-  key_name                = "${var.ssh_key_name}"
-  vpc_security_group_ids  = ["${var.vpc_security_group_ids}"]
-  subnet_id               = "${element(var.subnet_ids, count.index)}"
-  iam_instance_profile    = "${var.iam_profile_id}"
+  name               = "${local.hostname_prefix}-${count.index}"
+  folder             = "${var.vsphere_folder}"
+  resource_pool_id   = "${data.vsphere_compute_cluster.cluster.resource_pool_id}"
+  datastore_id       = "${data.vsphere_datastore.datastore.id}"
 
-  tags {
-    Name = "${local.name_prefix}-${count.index}"
-    Role = "${local.name_prefix}"
+  num_cpus   = "${var.node_vcpu}"
+  memory = "${var.node_memory}"
+  memory_reservation = "${var.node_memory}"
+  guest_id = "${data.vsphere_virtual_machine.template.guest_id}"
+
+  network_interface {
+      network_id = "${data.vsphere_network.network.id}"
+  }
+  disk {
+      label = "disk0"
+      size  = "${var.root_volume_size}"
   }
 
-  volume_tags {
-    Name = "${local.name_prefix}-${count.index}"
-  }
+  clone {
+      template_uuid = "${data.vsphere_virtual_machine.template.id}"
 
-  # Add EBS volume for Jira install/opt directory
-  root_block_device {
-    volume_size = "${var.root_volume_size}"
-    delete_on_termination = true
-  }
+      customize {
+        linux_options {
+          host_name = "${local.hostname_prefix}-${count.index}"
+          domain    = "${var.domain}"
+        }
 
-  provisioner "file" {
-    connection = {
-      type          = "ssh"
-      user          = "centos"
-      private_key   = "${file(var.ssh_key_path)}"
-      bastion_host  = "${var.bastion_host}"
+        network_interface {}
     }
-
-    content     = "${data.template_file.swarm_init.rendered}"
-    destination = "/tmp/swarm_init.sh"
   }
 
-  provisioner "file" {
-    connection = {
-      type          = "ssh"
-      user          = "centos"
-      private_key   = "${file(var.ssh_key_path)}"
-      bastion_host  = "${var.bastion_host}"
-    }
+  # tags = ["${vsphere_tag.name.id}", "${vsphere_tag.role.id}"]
 
-    content     = "${data.template_file.config_dtr_minio.rendered}"
-    destination = "/tmp/config_dtr_minio.sh"
-  }
-
-  provisioner "remote-exec" {
-    connection = {
-      type          = "ssh"
-      user          = "centos"
-      private_key   = "${file(var.ssh_key_path)}"
-      bastion_host  = "${var.bastion_host}"
-    }
-
-    inline = [
-      <<EOT
-NODE_NAME="${local.hostname_prefix}-${count.index}"
-echo "127.0.0.1 $NODE_NAME" | sudo tee --append /etc/hosts
-sudo hostnamectl set-hostname $NODE_NAME
-echo "${var.node_count}" > /tmp/node_count
-
-chmod +x /tmp/swarm_init.sh /tmp/config_dtr_minio.sh
-sudo /tmp/swarm_init.sh
-EOT
-    ]
-  }
 }
