@@ -1,11 +1,7 @@
+output "hostnames" {
+  value = ["${vsphere_virtual_machine.dockeree.*.name}"]
+}
+
 output "public_ips" {
-  value = ["${aws_instance.dockeree.*.public_ip}"]
-}
-
-output "private_ips" {
-  value = ["${aws_instance.dockeree.*.private_ip}"]
-}
-
-output "instance_ids" {
-  value = "${aws_instance.dockeree.*.id}"
+  value = ["${vsphere_virtual_machine.dockeree.*.default_ip_address}"]
 }

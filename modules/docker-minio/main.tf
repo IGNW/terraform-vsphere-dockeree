@@ -22,9 +22,15 @@ resource "random_string" "minio_secret_key" {
   special = false
 }
 
-resource "aws_instance" "minio" {
+resource "vsphere_virtual_machine" "minio" {
   # Create this resource only if the user does define their own endpoint
   count                   = "${var.minio_endpoint == "" ? 1 : 0}"
+
+  folder = "${var.vmware_folder}"
+  vcpu   = "${var.vmware_vcpus}"
+  memory = "${var.vmware_memory_mb}"
+  memory_reservation = "${var.vmware_memory_mb}"
+  datacenter = "${var.vmware_datacenter}"
 
   ami                     = "${var.ami_id}"
   instance_type           = "${var.instance_type}"
