@@ -53,27 +53,24 @@ data "vsphere_virtual_machine" "template" {
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 
-#resource "vsphere_tag_category" "name" {
-#    name = "Name"
-#    cardinality = "SINGLE"
-#    associable_types = ["VirtualMachine"]
-#}
+data "vsphere_tag_category" "name" {
+  name = "Name"
+}
 
-#resource "vsphere_tag_category" "role" {
-#    name = "Role"
-#    cardinality = "SINGLE"
-#    associable_types = ["VirtualMachine"]
-#}
+data "vsphere_tag_category" "role" {
+  name = "Role"
+}
 
-#resource "vsphere_tag" "name" {
-#  name = "${local.hostname_prefix}-${count.index}"
-#  category_id = "${vsphere_tag_category.name.id}"
-#}
+resource "vsphere_tag" "name" {
+  count       = "${var.node_count}"
+  name        = "${local.hostname_prefix}-${count.index}"
+  category_id = "${data.vsphere_tag_category.name.id}"
+}
 
-#resource "vsphere_tag" "role" {
-#  name = "${local.name_prefix}"
-#  category_id = "${vsphere_tag_category.name.id}"
-#}
+resource "vsphere_tag" "role" {
+  name = "${local.name_prefix}"
+  category_id = "${data.vsphere_tag_category.role.id}"
+}
 
 resource "vsphere_virtual_machine" "dockeree" {
   count                   = "${var.node_count}"
@@ -109,6 +106,6 @@ resource "vsphere_virtual_machine" "dockeree" {
     }
   }
 
-  # tags = ["${vsphere_tag.name.id}", "${vsphere_tag.role.id}"]
+  tags = ["${element(vsphere_tag.name.*.id, count.index)}", "${vsphere_tag.role.id}"]
 
 }
