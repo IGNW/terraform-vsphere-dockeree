@@ -81,42 +81,29 @@ module "docker-dtr" {
   # ucp_dns_name            = "${var.ucp_dns_name}"
   # dtr_dns_name            = "${var.dtr_dns_name}"
 
-#  minio_endpoint          = "${var.minio_endpoint != "" ? var.minio_endpoint : module.minio.minio_endpoint}"
-#  minio_access_key        = "${var.minio_access_key != "" ? var.minio_access_key : module.minio.access_key}"
-#  minio_secret_key        = "${var.minio_secret_key != "" ? var.minio_secret_key : module.minio.secret_key}"
+   minio_endpoint          = "${module.minio.minio_endpoint}"
+   minio_access_key        = "${module.minio.access_key}"
+   minio_secret_key        = "${module.minio.secret_key}"
 
    node_count              = "${var.dtr_node_count}"
 }
 
-#module "minio" {
-#  source                  = "modules/docker-minio"
-#
-#  bastion_host            = "${module.docker-manager.public_ips[0]}"
-#  ssh_key_name            = "${var.ssh_key_name}"
-#  ssh_key_path            = "${var.ssh_key_path}"
-#  environment             = "${var.environment}"
-#  ami_id                  = "${data.aws_ami.amazon_linux.id}"
-#
-#  instance_type           = "${var.minio_instance_type}"
-#  subnet_ids              = "${module.vpc.private_subnets}"
-#  vpc_security_group_ids  = ["${module.security-group-rules.minio_id}"]
-#
-#  minio_endpoint          = "${var.minio_endpoint}"
-#  minio_storage_size      = "${var.minio_storage_size}"
-#}
+module "minio" {
+  source                  = "modules/docker-minio"
+  environment             = "${var.environment}"
 
-#module "load-balancer" {
-#  source = "modules/dockeree-lb"
-#
-#  environment           = "${var.environment}"
-#  vpc_id                = "${module.vpc.vpc_id}"
-#  dns_zone              = "${var.dns_zone}"
-#  ucp_dns_name          = "${var.ucp_dns_name}"
-#  dtr_dns_name          = "${var.dtr_dns_name}"
-#  public_subnet_ids     = "${module.vpc.public_subnets}"
-#  ucp_mgr_instance_ids  = "${module.docker-manager.instance_ids}"
-#  ucp_node_count        = "${var.manager_node_count}"
-#  dtr_instance_ids      = "${module.docker-dtr.instance_ids}"
-#  dtr_node_count        = "${var.dtr_node_count}"
-#}
-# TODO: Create load balancer with master nodes behind it
+  vsphere_datacenter      = "${var.vsphere_datacenter}"
+  vsphere_datastore       = "${var.vsphere_datastore}"
+  vsphere_compute_cluster = "${var.vsphere_compute_cluster}"
+  vsphere_network         = "${var.vsphere_network}"
+  vsphere_folder          = "${var.vsphere_folder}"
+
+  disk_template           = "${var.minio_vm_template}"
+  root_password           = "${var.root_password}"
+  domain                  = "${var.domain}"
+  node_vcpu               = "${var.minio_vcpu}"
+  node_memory             = "${var.minio_memory_mb}"
+  root_volume_size        = "${var.minio_root_volume_size}"
+  consul_secret           = "${random_id.consul_secret.b64_std}"
+  minio_storage_size      = "${var.minio_storage_size}"
+}

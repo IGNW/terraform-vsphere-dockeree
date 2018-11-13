@@ -1,9 +1,9 @@
-output "private_ip" {
-  value = "${aws_instance.minio.0.private_ip}"
+output "public_ip" {
+  value = "${vsphere_virtual_machine.minio.0.default_ip_address}"
 }
 
 output "minio_endpoint" {
-  value = "${aws_instance.minio.0.private_ip}:${local.minio_port}"
+  value = "${vsphere_virtual_machine.minio.0.default_ip_address}:${local.minio_port}"
 }
 
 output "access_key" {
