@@ -4,14 +4,6 @@ locals {
   minio_port  = 9000
 }
 
-data "template_file" "mount_ebs" {
-  template = "${file("${path.module}/mount_ebs.tpl.sh")}"
-
-  vars {
-    disk_dev = "${local.disk_dev}"
-  }
-}
-
 resource "random_string" "minio_access_key" {
   length = 20
   special = false
@@ -22,71 +14,117 @@ resource "random_string" "minio_secret_key" {
   special = false
 }
 
+data "vsphere_tag_category" "name" {
+  name = "Name"
+}
+
+data "vsphere_tag_category" "role" {
+  name = "Role"
+}
+
+resource "vsphere_tag" "name" {
+  name        = "${local.name}"
+  category_id = "${data.vsphere_tag_category.name.id}"
+}
+
+resource "vsphere_tag" "role" {
+  name = "${local.name}"
+  category_id = "${data.vsphere_tag_category.role.id}"
+}
+
+data "vsphere_datacenter" "dc" {
+  name = "${var.vsphere_datacenter}"
+}
+
+data "vsphere_datastore" "datastore" {
+  name          = "${var.vsphere_datastore}"
+  datacenter_id = "${data.vsphere_datacenter.dc.id}"
+}
+
+data "vsphere_compute_cluster" "cluster" {
+  name          = "${var.vsphere_compute_cluster}"
+  datacenter_id = "${data.vsphere_datacenter.dc.id}"
+}
+
+data "vsphere_network" "network" {
+  name          = "${var.vsphere_network}"
+  datacenter_id = "${data.vsphere_datacenter.dc.id}"
+}
+
+variable "domain" {
+  description = "Domain name"
+}
+
+data "vsphere_virtual_machine" "template" {
+  name          = "${var.disk_template}"
+  datacenter_id = "${data.vsphere_datacenter.dc.id}"
+}
+
 resource "vsphere_virtual_machine" "minio" {
-  # Create this resource only if the user does define their own endpoint
-  count                   = "${var.minio_endpoint == "" ? 1 : 0}"
 
-  folder = "${var.vmware_folder}"
-  vcpu   = "${var.vmware_vcpus}"
-  memory = "${var.vmware_memory_mb}"
-  memory_reservation = "${var.vmware_memory_mb}"
-  datacenter = "${var.vmware_datacenter}"
+  name               = "${local.name}"
+  folder             = "${var.vsphere_folder}"
+  resource_pool_id   = "${data.vsphere_compute_cluster.cluster.resource_pool_id}"
+  datastore_id       = "${data.vsphere_datastore.datastore.id}"
 
-  ami                     = "${var.ami_id}"
-  instance_type           = "${var.instance_type}"
-  key_name                = "${var.ssh_key_name}"
-  vpc_security_group_ids  = ["${var.vpc_security_group_ids}"]
-  subnet_id               = "${element(var.subnet_ids, 0)}"
+  num_cpus = "${var.node_vcpu}"
+  memory = "${var.node_memory}"
+  memory_reservation = "${var.node_memory}"
+  guest_id = "${data.vsphere_virtual_machine.template.guest_id}"
 
-  tags {
-    Name = "${local.name}"
+  network_interface {
+      network_id = "${data.vsphere_network.network.id}"
+  }
+  disk {
+      label = "disk0"
+      size  = "${var.root_volume_size}"
   }
 
-  volume_tags {
-    Name = "${local.name}"
-  }
+  clone {
+      template_uuid = "${data.vsphere_virtual_machine.template.id}"
 
-  # Add EBS volume for Minio storage
-  ebs_block_device {
-    device_name = "${local.disk_dev}"
-    delete_on_termination = true
-    volume_size = "${var.minio_storage_size}"
-  }
+      customize {
+        linux_options {
+          host_name = "${local.name}"
+          domain    = "${var.domain}"
+        }
 
-  provisioner "file" {
-    connection = {
-      type          = "ssh"
-      private_key   = "${file(var.ssh_key_path)}"
-      user          = "ec2-user"
-      bastion_user  = "centos"
-      bastion_host  = "${var.bastion_host}"
+        network_interface {}
     }
-
-    content     = "${data.template_file.mount_ebs.rendered}"
-    destination = "/tmp/mount_ebs.sh"
   }
 
-  # Run the configuration script
-  provisioner "remote-exec" {
-    connection = {
-      type          = "ssh"
-      private_key   = "${file(var.ssh_key_path)}"
-      user          = "ec2-user"
-      bastion_user  = "centos"
-      bastion_host  = "${var.bastion_host}"
-    }
-    inline = [
+  tags = ["${vsphere_tag.name.*.id}", "${vsphere_tag.role.id}"]
+
+provisioner "remote-exec" {
+  connection = {
+    type = "ssh"
+    user = "root"
+    password = "${var.root_password}"
+  }
+  inline = ["touch /foo.bar"]
+
+}
+
+# Run the configuration script
+provisioner "remote-exec" {
+  connection = {
+  type = "ssh"
+  user = "root"
+  password = "${var.root_password}"
+}
+inline = [
 <<EOT
-sudo yum update -y
-sudo yum install docker -y
-sudo service docker start
-sudo usermod -a -G docker ec2-user
+yum update -y
+yum install docker -y
+service docker start
 
-chmod +x /tmp/mount_ebs.sh
-sudo /tmp/mount_ebs.sh || exit 1
-sudo mkdir /mnt/data/dtr
+# mount network storage
+mkdir -p /mnt/data
+mkdir -p /mnt/config
 
-sudo docker run -d -p ${local.minio_port}:${local.minio_port} --name minio --restart unless-stopped \
+mkdir /mnt/data/dtr
+
+docker run -d -p ${local.minio_port}:${local.minio_port} --name minio --restart unless-stopped \
   -e "MINIO_ACCESS_KEY=${random_string.minio_access_key.result}" \
   -e "MINIO_SECRET_KEY=${random_string.minio_secret_key.result}" \
   -e "MINIO_BROWSER=off" \

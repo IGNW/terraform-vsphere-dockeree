@@ -1,41 +1,52 @@
-variable "ssh_key_name" {
-  description = "Name of the EC2 Key Pair to be used for SSH."
-}
-
-variable "ssh_key_path" {
-  description = "Local path to the SSH key matching the key name given above."
-}
-
-variable "bastion_host" {
-  description = "Host to connect to first before making the provisioning connection."
-}
-
 variable "environment" {
   description = "Name to be used as a affix on resource names"
-}
-
-variable "vpc_security_group_ids" {
-  description = "A list of security group IDs to associate with."
-  type = "list"
-}
-
-variable "subnet_ids" {
-  description = "The VPC subnet IDs to launch instances in."
-  type = "list"
-}
-
-variable "ami_id" {
-  description = "Amazon Machine Image ID to use for creating EC2 instances."
-}
-
-variable "instance_type" {
-  description = "EC2 instance type to use for this node."
 }
 
 variable "minio_storage_size" {
   description = "Size in GB for Minio storage"
 }
 
-variable "minio_endpoint" {
-  description = "Optional user-provided Minio endpoint address. Determines if we build our own or not."
+variable "node_vcpu" {
+  description = "Virtual CPUs to configure for this node"
+}
+
+variable "node_memory" {
+  description = "Memory in MB to configure for this node"
+}
+
+variable "root_volume_size" {
+  description = "The size of the root volume in gigabytes."
+}
+
+variable "vsphere_datastore" {
+  description = "vSphere datastore to use for vms"
+}
+
+variable "vsphere_compute_cluster" {
+  description = "vSphere compute cluster on which to run vms"
+}
+
+variable "disk_template" {
+  description = "vSphere disk to use as a template"
+}
+
+variable "root_password" {
+  description = "root password for the vSphere disk template"
+}
+
+variable "vsphere_network" {
+  description = ""
+}
+
+variable "vsphere_folder" {
+  description = "vSphere folder in which to place vms"
+}
+
+variable "vsphere_datacenter" {
+  description = ""
+}
+
+variable "consul_secret" {
+  description = "The secret key to use for encryption of Consul network traffic"
+  type = "string"
 }

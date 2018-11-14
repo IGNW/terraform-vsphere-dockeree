@@ -125,22 +125,31 @@ variable "ucp_admin_password" {
   default = "ucpw123!"
 }
 
+variable "minio_vm_template" {
+  description = "VM template to use for Minio nodes"
+  default = "CentOS_7_Template"
+}
+
+variable "root_password" {
+  description = "root password for the vSphere disk template"
+}
+
+variable "minio_vcpu" {
+  description = "Number of virtual CPUs for DTR nodes"
+  default = 4
+}
+
+variable "minio_memory_mb" {
+  description = "Memory (in MB) for DTR nodes"
+  default = 4000
+}
+
+variable "minio_root_volume_size" {
+  description = "The size of the worker nodes' root volume in gigabytes."
+  default = 80
+}
+
 variable "minio_storage_size" {
   description = "Size in GB for Minio storage"
   default = 100
-}
-
-variable "minio_endpoint" {
-  description = "(Optional) Minio endpoint address for the DTR storage backend. Example:  10.0.0.65:9000"
-  default = ""
-}
-
-variable "minio_access_key" {
-  description = "(Optional) Minio access key for the DTR storage backend. Used only if minio_endpoint is not empty."
-  default = ""
-}
-
-variable "minio_secret_key" {
-  description = "(Optional) Minio secret key for the DTR storage backend. Used only if minio_endpoint is not empty."
-  default = ""
 }
