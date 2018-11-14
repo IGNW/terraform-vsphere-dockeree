@@ -4,14 +4,6 @@ locals {
   minio_port  = 9000
 }
 
-#data "template_file" "mount_ebs" {
-#  template = "${file("${path.module}/mount_ebs.tpl.sh")}"
-#
-#  vars {
-#    disk_dev = "${local.disk_dev}"
-#  }
-#}
-
 resource "random_string" "minio_access_key" {
   length = 20
   special = false
@@ -103,13 +95,6 @@ resource "vsphere_virtual_machine" "minio" {
 
   tags = ["${vsphere_tag.name.*.id}", "${vsphere_tag.role.id}"]
 
-  # Add EBS volume for Minio storage
-  # ebs_block_device {
-  #  device_name = "${local.disk_dev}"
-  #  delete_on_termination = true
-  #  volume_size = "${var.minio_storage_size}"
-  #}
-
 provisioner "remote-exec" {
   connection = {
     type = "ssh"
@@ -120,37 +105,34 @@ provisioner "remote-exec" {
 
 }
 
+# Run the configuration script
+provisioner "remote-exec" {
+  connection = {
+  type = "ssh"
+  user = "root"
+  password = "${var.root_password}"
+}
+inline = [
+<<EOT
+yum update -y
+yum install docker -y
+service docker start
 
+# mount network storage
+mkdir -p /mnt/data
+mkdir -p /mnt/config
 
-  # Run the configuration script
-  #provisioner "remote-exec" {
-  #  connection = {
-  #    type          = "ssh"
-  #    private_key   = "${file(var.ssh_key_path)}"
-  #    user          = "ec2-user"
-  #    bastion_user  = "centos"
-  #    bastion_host  = "${var.bastion_host}"
-  #  }
-  #  inline = [
-#<<EOT
-#sudo yum update -y
-#sudo yum install docker -y
-#sudo service docker start
-#sudo usermod -a -G docker ec2-user
-#
-#chmod +x /tmp/mount_ebs.sh
-#sudo /tmp/mount_ebs.sh || exit 1
-#sudo mkdir /mnt/data/dtr
+mkdir /mnt/data/dtr
 
-#sudo docker run -d -p ${local.minio_port}:${local.minio_port} --name minio --restart unless-stopped \
-#  -e "MINIO_ACCESS_KEY=${random_string.minio_access_key.result}" \
-#  -e "MINIO_SECRET_KEY=${random_string.minio_secret_key.result}" \
-#  -e "MINIO_BROWSER=off" \
-#  -e "MINIO_REGION=none" \
-#  -v /mnt/data:/data \
-#  -v /mnt/config:/root/.minio \
-#  minio/minio server /data
-#EOT
-#    ]
-#  }
+docker run -d -p ${local.minio_port}:${local.minio_port} --name minio --restart unless-stopped \
+  -e "MINIO_ACCESS_KEY=${random_string.minio_access_key.result}" \
+  -e "MINIO_SECRET_KEY=${random_string.minio_secret_key.result}" \
+  -e "MINIO_BROWSER=off" \
+  -e "MINIO_REGION=none" \
+  -v /mnt/data:/data \
+  -v /mnt/config:/root/.minio \
+  minio/minio server /data
+EOT
+    ]
+  }
 }
