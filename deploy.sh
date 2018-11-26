@@ -31,7 +31,7 @@ set -x
 info "Deploying Docker Enterprise Edition on cluster ${CLUSTER}"
 
 info "Building disk image template with Packer"
-${PACKER_PATH} build ${PACKER_IMAGE}
+${PACKER_PATH} build -force ${PACKER_IMAGE}
 result=$?
 if [ $result -ne 0 ]; then
   error "Packer build failed"
