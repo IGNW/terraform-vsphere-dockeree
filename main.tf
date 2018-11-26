@@ -22,7 +22,7 @@ module "docker-manager" {
   vsphere_network         = "${var.vsphere_network}"
   vsphere_folder          = "${var.vsphere_folder}"
 
-  disk_template           = "${var.manager_vm_template}"
+  disk_template           = "${var.vm_template}"
   domain                  = "${var.domain}"
   node_vcpu               = "${var.manager_vcpu}"
   node_memory             = "${var.manager_memory_mb}"
@@ -48,7 +48,7 @@ module "docker-worker" {
   vsphere_network         = "${var.vsphere_network}"
   vsphere_folder          = "${var.vsphere_folder}"
 
-  disk_template           = "${var.worker_vm_template}"
+  disk_template           = "${var.vm_template}"
   domain                  = "${var.domain}"
   node_vcpu               = "${var.worker_vcpu}"
   node_memory             = "${var.worker_memory_mb}"
@@ -70,7 +70,7 @@ module "docker-dtr" {
   vsphere_network         = "${var.vsphere_network}"
   vsphere_folder          = "${var.vsphere_folder}"
 
-  disk_template           = "${var.manager_vm_template}"
+  disk_template           = "${var.vm_template}"
   domain                  = "${var.domain}"
   node_vcpu               = "${var.dtr_vcpu}"
   node_memory             = "${var.dtr_memory_mb}"
@@ -98,8 +98,8 @@ module "minio" {
   vsphere_network         = "${var.vsphere_network}"
   vsphere_folder          = "${var.vsphere_folder}"
 
-  disk_template           = "${var.minio_vm_template}"
-  root_password           = "${var.root_password}"
+  disk_template           = "${var.vm_template}"
+  ssh_password            = "${var.ssh_password}"
   domain                  = "${var.domain}"
   node_vcpu               = "${var.minio_vcpu}"
   node_memory             = "${var.minio_memory_mb}"

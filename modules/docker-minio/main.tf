@@ -95,28 +95,28 @@ resource "vsphere_virtual_machine" "minio" {
 
   tags = ["${vsphere_tag.name.*.id}", "${vsphere_tag.role.id}"]
 
-provisioner "remote-exec" {
-  connection = {
-    type = "ssh"
-    user = "root"
-    password = "${var.root_password}"
-  }
-  inline = ["touch /foo.bar"]
-
-}
-
 # Run the configuration script
 provisioner "remote-exec" {
   connection = {
   type = "ssh"
-  user = "root"
-  password = "${var.root_password}"
+  user = "user1"
+  password = "${var.ssh_password}"
 }
 inline = [
 <<EOT
-yum update -y
-yum install docker -y
-service docker start
+sudo apt-get update -y
+sudo apt-get install \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    software-properties-common
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) stable"
+sudo apt-get update -y
+sudo apt-get install docker-ce -y
+sudo service docker start
 
 # mount network storage
 mkdir -p /mnt/data

@@ -30,8 +30,8 @@ variable "disk_template" {
   description = "vSphere disk to use as a template"
 }
 
-variable "root_password" {
-  description = "root password for the vSphere disk template"
+variable "ssh_password" {
+  description = "password for the user designated in ssh_username"
 }
 
 variable "vsphere_network" {

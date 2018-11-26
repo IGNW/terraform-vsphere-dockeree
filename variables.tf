@@ -40,11 +40,6 @@ variable "vsphere_folder" {
   default = "docker-ee"
 }
 
-variable "manager_vm_template" {
-  description = "VM template to use for manager nodes"
-  default = "CentOS_7_Template"
-}
-
 variable "manager_vcpu" {
   description = "Number of virtual CPUs for manager nodes"
   default = 4
@@ -63,11 +58,6 @@ variable "manager_node_count" {
 variable "manager_root_volume_size" {
   description = "The size of the manager nodes' root volume in gigabytes."
   default = 80
-}
-
-variable "worker_vm_template" {
-  description = "VM template to use for worker nodes"
-  default = "CentOS_7_Template"
 }
 
 variable "worker_vcpu" {
@@ -95,11 +85,6 @@ variable "dtr_node_count" {
   default = 3
 }
 
-variable "dtr_vm_template" {
-  description = "VM template to use for DTR nodes"
-  default = "CentOS_7_Template"
-}
-
 variable "dtr_vcpu" {
   description = "Number of virtual CPUs for DTR nodes"
   default = 4
@@ -112,7 +97,7 @@ variable "dtr_memory_mb" {
 
 variable "dtr_root_volume_size" {
   description = "The size of the DTR nodes' root volume in gigabytes. Not used for image storage."
-  default = 16
+  default = 20
 }
 
 variable "ucp_admin_username" {
@@ -125,13 +110,13 @@ variable "ucp_admin_password" {
   default = "ucpw123!"
 }
 
-variable "minio_vm_template" {
-  description = "VM template to use for Minio nodes"
+variable "vm_template" {
+  description = "VM template to use"
   default = "CentOS_7_Template"
 }
 
-variable "root_password" {
-  description = "root password for the vSphere disk template"
+variable "ssh_password" {
+  description = "password for the user designated in ssh_username"
 }
 
 variable "minio_vcpu" {
