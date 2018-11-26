@@ -27,9 +27,10 @@ if [ -z $PACKER_IMAGE ]; then
   PACKER_IMAGE="images/ubuntu-1804-vsphere.json"
 fi
 
+set -x
 info "Deploying Docker Enterprise Edition on cluster ${CLUSTER}"
 
-info "Creating disk image with Packer"
+info "Building disk image template with Packer"
 ${PACKER_PATH} build ${PACKER_IMAGE}
 result=$?
 if [ $result -ne 0 ]; then
