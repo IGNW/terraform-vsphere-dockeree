@@ -24,7 +24,7 @@ if [ -z $PACKER_PATH ]; then
 fi
 
 if [ -z $PACKER_IMAGE ]; then
-  PACKER_IMAGE="images/dockeree-centos.json"
+  PACKER_IMAGE="images/ubuntu-1804-vsphere.json"
 fi
 
 info "Deploying Docker Enterprise Edition on cluster ${CLUSTER}"
