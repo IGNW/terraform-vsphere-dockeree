@@ -99,7 +99,7 @@ module "minio" {
   vsphere_folder          = "${var.vsphere_folder}"
 
   disk_template           = "${var.vm_template}"
-  ssh_password            = "${var.ssh_password}"
+  terraform_password      = "${var.terraform_password}"
   domain                  = "${var.domain}"
   node_vcpu               = "${var.minio_vcpu}"
   node_memory             = "${var.minio_memory_mb}"

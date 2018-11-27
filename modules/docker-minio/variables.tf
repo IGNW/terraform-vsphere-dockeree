@@ -30,8 +30,8 @@ variable "disk_template" {
   description = "vSphere disk to use as a template"
 }
 
-variable "ssh_password" {
-  description = "password for the user designated in ssh_username"
+variable "terraform_password" {
+  description = "password to use when ssh'ing as 'terraform'"
 }
 
 variable "vsphere_network" {

@@ -1,1 +1,1 @@
-path = "/mnt/nfs/terraform/terraform.tfstate"
+path = "/usr/local/terraform/terraform.tfstate"

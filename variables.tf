@@ -115,8 +115,8 @@ variable "vm_template" {
   default = "CentOS_7_Template"
 }
 
-variable "ssh_password" {
-  description = "password for the user designated in ssh_username"
+variable "terraform_password" {
+  description = "password for the terraform user account (for ssh)"
 }
 
 variable "minio_vcpu" {
