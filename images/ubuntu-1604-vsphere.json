@@ -45,16 +45,16 @@
 	"<enter>"
       ],
     "ssh_timeout": "30m",
-    "ssh_username": "user1",
+    "ssh_username": "terraform",
     "ssh_password": "changeme1",
     "shutdown_command": "sudo systemctl poweroff"
  }],
   "provisioners": [
     {
       "type": "shell",
-      "execute_command": "echo 'user1' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "execute_command": "echo 'terraform' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
       "scripts": [
-        "scripts/interface.sh"
+        "scripts/sudo.sh"
       ]
     }
  ]
