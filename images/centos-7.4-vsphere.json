@@ -9,7 +9,7 @@
     "cluster": "pod1-hx",
     "host": "172.20.1.31",
     "datastore": "Primary",
-    "folder": "Templates",
+    "folder": "Templates/Packer",
     "vm_name": "centOS7_template_packer",
     "vm_version": "11",
     "disk_thin_provisioned": "true",
