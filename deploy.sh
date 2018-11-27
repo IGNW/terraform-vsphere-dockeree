@@ -24,20 +24,25 @@ if [ -z $PACKER_PATH ]; then
 fi
 
 if [ -z $PACKER_IMAGE ]; then
-  PACKER_IMAGE="images/ubuntu-1804-vsphere.json"
+  PACKER_IMAGE="ubuntu-1604-vsphere.json"
+fi
+
+if [ -z $TFSTATE_PATH ]; then
+  TFSTATE_PATH="/usr/local/terraform/${CLUSTER}.tfstate"
 fi
 
 set -x
 info "Deploying Docker Enterprise Edition on cluster ${CLUSTER}"
 
 info "Building disk image template with Packer"
+cd images
 ${PACKER_PATH} build -force ${PACKER_IMAGE}
 result=$?
 if [ $result -ne 0 ]; then
   error "Packer build failed"
   exit 1
 fi
-
+cd ..
 info "Initializing terraform"
 terraform init -backend-config="clusters/${CLUSTER}/${CLUSTER}.init"
 result=$?

@@ -99,13 +99,14 @@ resource "vsphere_virtual_machine" "minio" {
 provisioner "remote-exec" {
   connection = {
   type = "ssh"
-  user = "user1"
-  password = "${var.ssh_password}"
+  user = "terraform"
+  password = "${var.terraform_password}"
 }
 inline = [
 <<EOT
+set -x
 sudo apt-get update -y
-sudo apt-get install \
+sudo apt-get install -y \
     apt-transport-https \
     ca-certificates \
     curl \
@@ -124,7 +125,7 @@ mkdir -p /mnt/config
 
 mkdir /mnt/data/dtr
 
-docker run -d -p ${local.minio_port}:${local.minio_port} --name minio --restart unless-stopped \
+sudo docker run -d -p ${local.minio_port}:${local.minio_port} --name minio --restart unless-stopped \
   -e "MINIO_ACCESS_KEY=${random_string.minio_access_key.result}" \
   -e "MINIO_SECRET_KEY=${random_string.minio_secret_key.result}" \
   -e "MINIO_BROWSER=off" \
