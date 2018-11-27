@@ -6,11 +6,10 @@
 		"username": "administrator@vsphere.local",
 		"password": "Cisco1234!",
 		"cluster": "pod1-hx",
-		"host": "172.20.1.31",
 		"datastore": "Primary",
-		"vm_name": "Ubuntu1804_template_packer",
+		"vm_name": "ubuntu1804_template_packer",
 		"vm_version": "11",
-		"folder": "Templates",
+		"folder": "Templates/Packer",
 		"disk_thin_provisioned": "true",
 		"convert_to_template": "true",
 		"guest_os_type": "ubuntu64Guest",
@@ -39,7 +38,7 @@
                         "<enter>"
 		],
 		"ssh_timeout": "60m",
-		"ssh_username": "user1",
+		"ssh_username": "terraform",
 		"ssh_password": "changeme1",
 		"shutdown_command": "sudo systemctl poweroff"
 	}],
@@ -62,13 +61,12 @@
         "no_proxy": "{{env `no_proxy`}}",
         "preseed": "preseed.cfg",
         "hostname": "ubuntu-1804",
-        "ssh_fullname": "user1",
+        "ssh_fullname": "terraform",
         "ssh_password": "changeme1",
-        "ssh_username": "user1",
+        "ssh_username": "terraform",
         "update": "true",
         "vagrantfile_template": "",
         "version": "0.1",
-        "virtualbox_guest_os_type": "Ubuntu_64",
         "vm_name": "ubuntu-1804"
     }
 }
