@@ -1,8 +1,0 @@
-vsphere_server = "172.20.1.5"
-vsphere_user = "administrator@vsphere.local"
-vsphere_datacenter = "pod1-hx-dc"
-vsphere_datastore = "Primary"
-vsphere_compute_cluster = "pod1-hx"
-vsphere_network = "vm-network-40"
-domain = "ignw.io"
-environment = "dev"
