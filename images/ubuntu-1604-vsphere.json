@@ -7,11 +7,10 @@
     "username": "administrator@vsphere.local",
     "password": "Cisco1234!",
     "cluster": "pod1-hx",
-    "host": "172.20.1.31",
     "datastore": "Primary",
     "vm_name": "ubuntu1604_template_packer",
     "vm_version": "11",
-    "folder": "Templates",
+    "folder": "Templates/Packer",
     "disk_thin_provisioned": "true",
     "convert_to_template": "true",
     "guest_os_type": "ubuntu64Guest",
@@ -45,16 +44,16 @@
 	"<enter>"
       ],
     "ssh_timeout": "30m",
-    "ssh_username": "user1",
+    "ssh_username": "terraform",
     "ssh_password": "changeme1",
     "shutdown_command": "sudo systemctl poweroff"
  }],
   "provisioners": [
     {
       "type": "shell",
-      "execute_command": "echo 'user1' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "execute_command": "echo 'terraform' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
       "scripts": [
-        "scripts/interface.sh"
+        "scripts/sudo.sh"
       ]
     }
  ]
