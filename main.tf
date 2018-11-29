@@ -23,6 +23,7 @@ module "docker-manager" {
   vsphere_folder          = "${var.vsphere_folder}"
 
   disk_template           = "${var.vm_template}"
+  terraform_password      = "${var.terraform_password}"
   domain                  = "${var.domain}"
   node_vcpu               = "${var.manager_vcpu}"
   node_memory             = "${var.manager_memory_mb}"
@@ -38,7 +39,6 @@ module "docker-manager" {
 module "docker-worker" {
   source                  = "modules/dockeree-node"
 
-  # bastion_host            = "${module.docker-manager.public_ips[0]}"
   node_type               = "wrk"
   environment             = "${var.environment}"
 
@@ -49,11 +49,14 @@ module "docker-worker" {
   vsphere_folder          = "${var.vsphere_folder}"
 
   disk_template           = "${var.vm_template}"
+  terraform_password      = "${var.terraform_password}"
   domain                  = "${var.domain}"
   node_vcpu               = "${var.worker_vcpu}"
   node_memory             = "${var.worker_memory_mb}"
   root_volume_size        = "${var.worker_root_volume_size}"
   consul_secret           = "${random_id.consul_secret.b64_std}"
+  ucp_admin_username      = "${var.ucp_admin_username}"
+  ucp_admin_password      = "${var.ucp_admin_password}"
 
   node_count              = "${var.worker_node_count}"
 }
@@ -71,6 +74,7 @@ module "docker-dtr" {
   vsphere_folder          = "${var.vsphere_folder}"
 
   disk_template           = "${var.vm_template}"
+  terraform_password      = "${var.terraform_password}"
   domain                  = "${var.domain}"
   node_vcpu               = "${var.dtr_vcpu}"
   node_memory             = "${var.dtr_memory_mb}"
@@ -105,5 +109,6 @@ module "minio" {
   node_memory             = "${var.minio_memory_mb}"
   root_volume_size        = "${var.minio_root_volume_size}"
   consul_secret           = "${random_id.consul_secret.b64_std}"
-  minio_storage_size      = "${var.minio_storage_size}"
+  dtr_storage_host        = "${var.dtr_storage_host}"
+  dtr_storage_path        = "${var.dtr_storage_path}"
 }

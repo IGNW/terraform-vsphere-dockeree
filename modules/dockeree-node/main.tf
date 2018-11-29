@@ -101,11 +101,50 @@ resource "vsphere_virtual_machine" "dockeree" {
           host_name = "${local.hostname_prefix}-${count.index}"
           domain    = "${var.domain}"
         }
-
         network_interface {}
+        dns_server_list = ["8.8.8.8"]
+        dns_suffix_list = ["${var.domain}"]
     }
   }
 
   tags = ["${element(vsphere_tag.name.*.id, count.index)}", "${vsphere_tag.role.id}"]
+
+  provisioner "file" {
+    connection = {
+      type          = "ssh"
+      user          = "terraform"
+      password = "${var.terraform_password}"
+    }
+
+    content     = "${data.template_file.swarm_init.rendered}"
+    destination = "/tmp/swarm_init.sh"
+  }
+
+  provisioner "file" {
+    connection = {
+      type          = "ssh"
+      user          = "terraform"
+      password = "${var.terraform_password}"
+    }
+
+    content     = "${data.template_file.config_dtr_minio.rendered}"
+    destination = "/tmp/config_dtr_minio.sh"
+  }
+
+  provisioner "remote-exec" {
+    connection = {
+      type          = "ssh"
+      user          = "terraform"
+      password = "${var.terraform_password}"
+    }
+
+    inline = [
+      <<EOT
+echo "${var.node_count}" > /tmp/node_count
+chmod +x /tmp/swarm_init.sh /tmp/config_dtr_minio.sh
+sudo /tmp/swarm_init.sh | tee /tmp/swarm_init.log
+EOT
+    ]
+  }
 
 }

@@ -2,10 +2,6 @@ variable "environment" {
   description = "Name to be used as a affix on resource names"
 }
 
-variable "minio_storage_size" {
-  description = "Size in GB for Minio storage"
-}
-
 variable "node_vcpu" {
   description = "Virtual CPUs to configure for this node"
 }
@@ -49,4 +45,13 @@ variable "vsphere_datacenter" {
 variable "consul_secret" {
   description = "The secret key to use for encryption of Consul network traffic"
   type = "string"
+}
+
+variable "dtr_storage_host" {
+  description = "Host with NFS share for DTR storage"
+}
+
+variable "dtr_storage_path" {
+  description = "Path to NFS share on storage host"
+  default = "/data/dtr"
 }

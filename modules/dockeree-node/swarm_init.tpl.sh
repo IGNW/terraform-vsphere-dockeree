@@ -3,7 +3,7 @@
 # Further nodes are joined after the initial server/manager nodes are created.
 
 API_BASE="http://127.0.0.1:8500/v1"
-ADV_IP=$(/sbin/ip -f inet addr show dev eth0 | grep -Po 'inet \K[\d.]+')
+ADV_IP=$(/sbin/ip -f inet addr show dev ens160 | grep -Po 'inet \K[\d.]+')
 
 function consul_server_init {
     echo "Initializing Consul server"
@@ -59,7 +59,7 @@ function create_ucp_swarm {
     docker container run --rm -it --name ucp \
         -v /var/run/docker.sock:/var/run/docker.sock \
         docker/ucp:2.2.5 install \
-        --host-address eth0 \
+        --host-address ens160 \
         --admin-username ${ucp_admin_username} \
         --admin-password ${ucp_admin_password} \
         --san ${ucp_dns_name}

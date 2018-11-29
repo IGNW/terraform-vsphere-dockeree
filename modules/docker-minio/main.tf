@@ -88,8 +88,9 @@ resource "vsphere_virtual_machine" "minio" {
           host_name = "${local.name}"
           domain    = "${var.domain}"
         }
-
         network_interface {}
+        dns_server_list = ["8.8.8.8"]
+        dns_suffix_list = ["${var.domain}"]
     }
   }
 
@@ -120,10 +121,8 @@ sudo apt-get install docker-ce -y
 sudo service docker start
 
 # mount network storage
-mkdir -p /mnt/data
-mkdir -p /mnt/config
-
-mkdir /mnt/data/dtr
+sudo mkdir -p /mnt/data/dtr
+sudo mount -t nfs ${var.dtr_storage_host}:${var.dtr_storage_path} /mnt/data/dtr
 
 sudo docker run -d -p ${local.minio_port}:${local.minio_port} --name minio --restart unless-stopped \
   -e "MINIO_ACCESS_KEY=${random_string.minio_access_key.result}" \
