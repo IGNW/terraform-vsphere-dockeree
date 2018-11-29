@@ -53,7 +53,8 @@
       "type": "shell",
       "execute_command": "echo 'terraform' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
       "scripts": [
-        "scripts/sudo.sh"
+        "scripts/sudo.sh",
+        "scripts/install_docker_ee.sh"
       ]
     }
  ]
