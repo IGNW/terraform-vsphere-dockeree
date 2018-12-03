@@ -10,6 +10,7 @@ resource "random_id" "consul_secret" {
   byte_length = 16
 }
 
+# We create one mamnager node first so that we can know its IP address
 module "docker-manager-primary" {
   source                  = "modules/dockeree-node"
 
@@ -67,6 +68,7 @@ module "docker-worker" {
 
   node_type               = "wrk"
   environment             = "${var.environment}"
+  primary_manager_ip      = "${ module.docker-manager-primary.public_ips[0]}"
 
   vsphere_datacenter      = "${var.vsphere_datacenter}"
   vsphere_datastore       = "${var.vsphere_datastore}"
@@ -92,6 +94,7 @@ module "docker-dtr" {
   source                  = "modules/dockeree-node"
   node_type               = "dtr"
   environment             = "${var.environment}"
+  primary_manager_ip      = "${ module.docker-manager-primary.public_ips[0]}"
 
   vsphere_datacenter      = "${var.vsphere_datacenter}"
   vsphere_datastore       = "${var.vsphere_datastore}"

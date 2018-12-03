@@ -58,20 +58,22 @@ data "vsphere_tag_category" "name" {
   name = "Name"
 }
 
-data "vsphere_tag_category" "role" {
-  name = "Role"
-}
+#data "vsphere_tag_category" "role" {
+#  name = "Role"
+#}
 
 resource "vsphere_tag" "name" {
   count       = "${var.node_count}"
-  name        = "${local.hostname_prefix}-${count.index}"
+  name        = "${local.hostname_prefix}-${var.start_id + count.index}"
   category_id = "${data.vsphere_tag_category.name.id}"
 }
 
-resource "vsphere_tag" "role" {
-  name = "${local.name_prefix}"
-  category_id = "${data.vsphere_tag_category.role.id}"
-}
+#resource "vsphere_tag" "role" {
+#  count = "${1 - var.start_id}"
+#
+#  name = "${local.name_prefix}"
+#  category_id = "${data.vsphere_tag_category.role.id}"
+#}
 
 resource "vsphere_virtual_machine" "dockeree" {
   count                   = "${var.node_count}"
@@ -108,7 +110,8 @@ resource "vsphere_virtual_machine" "dockeree" {
     }
   }
 
-  tags = ["${element(vsphere_tag.name.*.id, count.index)}", "${vsphere_tag.role.id}"]
+  # tags = ["${element(vsphere_tag.name.*.id, count.index)}", "${vsphere_tag.role.id}"]
+  tags = ["${element(vsphere_tag.name.*.id, count.index)}"]
 
   provisioner "file" {
     connection = {

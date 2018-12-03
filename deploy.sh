@@ -53,7 +53,7 @@ else
 fi
 
 info "Initializing terraform"
-terraform init -backend-config="clusters/${CLUSTER}/${CLUSTER}.init"
+terraform init
 result=$?
 if [ $result -ne 0 ]; then
   error "Terraform initalization failed"
@@ -61,7 +61,7 @@ if [ $result -ne 0 ]; then
 fi
 
 info "Applying terraform changes"
-terraform apply -auto-approve -var-file "clusters/${CLUSTER}/${CLUSTER}.tfvars"
+terraform apply -auto-approve -var-file "clusters/${CLUSTER}/terraform.tfvars"
 result=$?
 if [ $result -ne 0 ]; then
   error "Terraform apply failed"

@@ -1,3 +1,4 @@
 images/packer_cache
 terraform.tfstate*
+terraform.tfvars
 .terraform/
