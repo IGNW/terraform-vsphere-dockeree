@@ -1,5 +1,5 @@
 output "manager_public_ips" {
-  value = "${module.docker-manager.public_ips}"
+  value = "${concat(module.docker-manager-primary.public_ips, module.docker-manager.public_ips)}"
 }
 
 output "worker_public_ips" {

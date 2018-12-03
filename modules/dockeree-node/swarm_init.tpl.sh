@@ -5,6 +5,17 @@
 API_BASE="http://127.0.0.1:8500/v1"
 ADV_IP=$(/sbin/ip -f inet addr show dev ens160 | grep -Po 'inet \K[\d.]+')
 
+function consul_cluster_init {
+  echo "Initializing Consul cluster"
+  docker run -d --net=host --name consul \
+      consul agent -server \
+      -bind="0.0.0.0" \
+      -advertise="$ADV_IP" \
+      -data-dir='/tmp' \
+      -encrypt='${consul_secret}' \
+      -bootstrap-expect=$(cat /tmp/node_count)
+}
+
 function consul_server_init {
     echo "Initializing Consul server"
     docker run -d --net=host --name consul \
@@ -13,7 +24,7 @@ function consul_server_init {
         -advertise="$ADV_IP" \
         -data-dir='/tmp' \
         -encrypt='${consul_secret}' \
-        -retry-join="provider=aws tag_key=Role tag_value=${role}" \
+        -retry-join="${manager_zero_ip}" \
         -bootstrap-expect=$(cat /tmp/node_count)
 
     wait_for_consul_leader
@@ -41,7 +52,7 @@ function wait_for_ucp_manager {
     echo "Existing UCP manager is available"
 }
 
-function consul_agent_init {
+function consul_agent_join {
     echo "Initializing Consul agent"
     docker run -d --net=host --name consul \
         consul agent \
@@ -164,7 +175,17 @@ function dtr_join {
 }
 
 if [[ $HOSTNAME =~ mgr ]]; then
-    consul_server_init
+    echo "This is a manager node"
+
+    if [[ $HOSTNAME =~ 0 ]]; then
+      echo "This is the primary manager node"
+      consul_cluster_init
+    else
+      consul_server_init
+    fi
+
+    exit 0
+    
     SID=$(curl -sX PUT $API_BASE/session/create | jq -r '.ID')
     # Check a key to find out if the UCP swarm is already initialized
     FLAGS=$(curl -s $API_BASE/kv/ucp_swarm_initialized | jq -r '.[0].Flags')

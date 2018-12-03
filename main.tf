@@ -10,7 +10,7 @@ resource "random_id" "consul_secret" {
   byte_length = 16
 }
 
-module "docker-manager" {
+module "docker-manager-primary" {
   source                  = "modules/dockeree-node"
 
   node_type               = "mgr"
@@ -31,9 +31,35 @@ module "docker-manager" {
   consul_secret           = "${random_id.consul_secret.b64_std}"
   ucp_admin_username      = "${var.ucp_admin_username}"
   ucp_admin_password      = "${var.ucp_admin_password}"
-  # ucp_dns_name            = "${var.ucp_dns_name}"
+  node_count              = "1"
+}
 
-  node_count              = "${var.manager_node_count}"
+module "docker-manager" {
+  source                  = "modules/dockeree-node"
+
+  node_type               = "mgr"
+  environment             = "${var.environment}"
+  start_id                = 1
+  primary_manager_ip      = "${ module.docker-manager-primary.public_ips[0]}"
+
+  vsphere_datacenter      = "${var.vsphere_datacenter}"
+  vsphere_datastore       = "${var.vsphere_datastore}"
+  vsphere_compute_cluster = "${var.vsphere_compute_cluster}"
+  vsphere_network         = "${var.vsphere_network}"
+  vsphere_folder          = "${var.vsphere_folder}"
+
+  disk_template           = "${var.vm_template}"
+  terraform_password      = "${var.terraform_password}"
+  domain                  = "${var.domain}"
+  node_vcpu               = "${var.manager_vcpu}"
+  node_memory             = "${var.manager_memory_mb}"
+  root_volume_size        = "${var.manager_root_volume_size}"
+  consul_secret           = "${random_id.consul_secret.b64_std}"
+  ucp_admin_username      = "${var.ucp_admin_username}"
+  ucp_admin_password      = "${var.ucp_admin_password}"
+  # ucp_dns_name          = "${var.ucp_dns_name}"
+
+  node_count              = "${var.manager_node_count - 1}"
 }
 
 module "docker-worker" {

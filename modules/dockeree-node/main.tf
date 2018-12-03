@@ -14,6 +14,7 @@ data "template_file" "swarm_init" {
     ucp_admin_password  = "${var.ucp_admin_password}"
     ucp_dns_name        = "${var.ucp_dns_name}"
     dtr_dns_name        = "${var.dtr_dns_name}"
+    manager_zero_ip     = "${var.primary_manager_ip}"
   }
 }
 
@@ -75,7 +76,7 @@ resource "vsphere_tag" "role" {
 resource "vsphere_virtual_machine" "dockeree" {
   count                   = "${var.node_count}"
 
-  name               = "${local.hostname_prefix}-${count.index}"
+  name               = "${local.hostname_prefix}-${var.start_id + count.index}"
   folder             = "${var.vsphere_folder}"
   resource_pool_id   = "${data.vsphere_compute_cluster.cluster.resource_pool_id}"
   datastore_id       = "${data.vsphere_datastore.datastore.id}"
@@ -98,7 +99,7 @@ resource "vsphere_virtual_machine" "dockeree" {
 
       customize {
         linux_options {
-          host_name = "${local.hostname_prefix}-${count.index}"
+          host_name = "${local.hostname_prefix}-${var.start_id + count.index}"
           domain    = "${var.domain}"
         }
         network_interface {}
