@@ -31,23 +31,32 @@ if [ -z $TFSTATE_PATH ]; then
   TFSTATE_PATH="/usr/local/terraform/${CLUSTER}.tfstate"
 fi
 
+if [ -z $BUILD_DISK_IMAGE ]; then
+  BUILD_DISK_IMAGE=true
+fi
+
 set -x
 info "Deploying Docker Enterprise Edition on cluster ${CLUSTER}"
 
-info "Building disk image template with Packer"
-cd images
-${PACKER_PATH} build -force ${PACKER_IMAGE}
-result=$?
-if [ $result -ne 0 ]; then
-  error "Packer build failed"
-  exit 1
+if [ $BUILD_DISK_IMAGE == "true" ]; then
+  info "Building disk image template with Packer"
+  cd images
+  ${PACKER_PATH} build -force ${PACKER_IMAGE}
+  result=$?
+  if [ $result -ne 0 ]; then
+    error "Packer build failed"
+    exit 1
+  fi
+  cd ..
+else
+  echo "Skipping Packer Build step because BUILD_DISK_IMAGE = ${BUILD_DISK_IMAGE}"
 fi
-cd ..
+
 info "Initializing terraform"
 terraform init -backend-config="clusters/${CLUSTER}/${CLUSTER}.init"
 result=$?
 if [ $result -ne 0 ]; then
-  error "Terraform initalization faled"
+  error "Terraform initalization failed"
   exit 1
 fi
 

@@ -1,14 +1,13 @@
-variable "bastion_host" {
-  description = "Host to connect to first before making the provisioning connection."
-  default = ""
-}
-
 variable "environment" {
   description = "Name to be used as a affix on resource names"
 }
 
 variable "node_type" {
   description = "Short code indicating the role of this node."
+}
+
+variable "terraform_password" {
+  description = "Password for the 'terraform' account configured on the disk image"
 }
 
 variable "domain" {
@@ -62,12 +61,10 @@ variable "consul_secret" {
 
 variable "ucp_admin_username" {
   description = "Username for the UCP administrator account."
-  default = ""
 }
 
 variable "ucp_admin_password" {
-  description = "Password for the UCP administrator acount."
-  default = ""
+  description = "Password for the UCP administrator account."
 }
 
 variable "ucp_dns_name" {

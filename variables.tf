@@ -134,7 +134,11 @@ variable "minio_root_volume_size" {
   default = 80
 }
 
-variable "minio_storage_size" {
-  description = "Size in GB for Minio storage"
-  default = 100
+variable "dtr_storage_host" {
+  description = "Host with NFS share for DTR storage"
+}
+
+variable "dtr_storage_path" {
+  description = "Path to NFS share on storage host"
+  default = "/data/dtr"
 }

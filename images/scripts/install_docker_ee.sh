@@ -9,7 +9,6 @@ echo 'server 169.254.169.123 prefer iburst' | sudo tee --append /etc/chrony.conf
 DOCKER_EE_URL="https://storebits.docker.com/ee/ubuntu/sub-d8013021-7ac0-42ed-bec6-b0e9e114295f"
 curl -fsSL "${DOCKER_EE_URL}/ubuntu/gpg" | sudo apt-key add -
 sudo add-apt-repository "deb [arch=amd64] $DOCKER_EE_URL/ubuntu $(lsb_release -cs) stable-18.09"
-sudo apt-get update
-sudo apt-get install docker-ee
+sudo apt-get update -y
+sudo apt-get install -y docker-ee
 sudo docker run hello-world
-sudo mkdir /etc/docker
