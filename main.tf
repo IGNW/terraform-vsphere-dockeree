@@ -10,7 +10,7 @@ resource "random_id" "consul_secret" {
   byte_length = 16
 }
 
-# We create one mamnager node first so that we can know its IP address
+# We create one manager node first so that we can know its IP address
 module "docker-manager-primary" {
   source                  = "modules/dockeree-node"
 

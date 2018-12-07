@@ -25,9 +25,7 @@ function consul_cluster_init {
       -advertise="$ADV_IP" \
       -data-dir='/tmp' \
       -encrypt='${consul_secret}' \
-      -bootstrap-expect=$(cat /tmp/node_count)
-
-  wait_for_consul_leader
+      -bootstrap-expect="1"
 }
 
 function consul_server_init {
@@ -38,8 +36,7 @@ function consul_server_init {
         -advertise="$ADV_IP" \
         -data-dir='/tmp' \
         -encrypt='${consul_secret}' \
-        -retry-join="${manager_zero_ip}" \
-        -bootstrap-expect=$(cat /tmp/node_count)
+        -retry-join="${manager_zero_ip}"
 
     wait_for_consul_leader
 }
@@ -51,7 +48,7 @@ function get_leader {
 function wait_for_consul_leader {
     LEADER=$(get_leader)
     while [[ -z $LEADER || $LEADER == "No known Consul servers" || $LEADER == "No cluster leader" ]]; do
-        echo "No Consul leader is available/elected yet. Sleeping for 15 seconds"
+        info "No Consul leader is available/elected yet. Sleeping for 15 seconds"
         sleep 15
         LEADER=$(get_leader)
     done
@@ -60,7 +57,7 @@ function wait_for_consul_leader {
 
 function wait_for_ucp_manager {
     until $(curl -k --output /dev/null --silent --head --fail https://ucpmgr.service.consul); do
-        echo "Waiting for existing UCP manager to be reachable via HTTPS"
+        info "Waiting for existing UCP manager to be reachable via HTTPS"
         sleep 15
     done
     info "Existing UCP manager is available"
@@ -94,8 +91,6 @@ function create_ucp_swarm {
     curl -sX PUT -d "$MANAGER_TOKEN" $API_BASE/kv/ucp/manager_token
     curl -sX PUT -d "$WORKER_TOKEN" $API_BASE/kv/ucp/worker_token
 
-    info "Setting flag to indicate that the UCP swarm is initialized."
-    curl -sX PUT -d "$HOSTNAME.node.consul" "$API_BASE/kv/ucp_swarm_initialized?release=$SID&flags=2"
     info "Registering this node as a UCP manager"
     curl -sX PUT -d '{"Name": "ucpmgr", "Port": 2377}' $API_BASE/agent/service/register
 }
@@ -192,55 +187,20 @@ if [[ $HOSTNAME =~ mgr ]]; then
     if [[ $HOSTNAME =~ 0 ]]; then
       info "This is the primary manager node"
       consul_cluster_init
+      create_ucp_swarm
     else
       consul_server_init
+      ucp_join_manager
     fi
-
-    SID=$(echo curl -sX PUT $API_BASE/session/create | jq -r '.ID')
-    info "Session ID: $SID"
-    # Check a key to find out if the UCP swarm is already initialized
-    info "Querying $API_BASE/kv/ucp_swarm_initialized"
-    FLAGS=$(curl -s $API_BASE/kv/ucp_swarm_initialized | jq -r '.[0].Flags')
-    if [[ -z $FLAGS ]]; then
-        info "UCP swarm is uninitialized. Trying to get the lock."
-
-        R=$(curl -sX PUT "$API_BASE/kv/ucp_swarm_initialized?acquire=$SID&flags=1")
-        while [[ -z $R ]]; do
-            info "No response to attempt to get lock. Consul not ready yet? Sleeping..."
-            sleep 10
-            R=$(curl -sX PUT "$API_BASE/kv/ucp_swarm_initialized?acquire=$SID&flags=1")
-        done
-
-        if [[ $R == "true" ]]; then
-            info "Got the lock. Initializing the UCP swarm."
-            create_ucp_swarm
-        else
-            info "Someone else got the lock first? R:($R)"
-            swarm_wait_until_ready ucp ucp_swarm_initialized
-            ucp_join_manager
-        fi
-
-    elif [[ "$FLAGS" == "1" ]]; then
-        info "Found that swarm initialization is in progress"
-        swarm_wait_until_ready ucp ucp_swarm_initialized
-        ucp_join_manager
-
-    elif [[ "$FLAGS" == "2" ]]; then
-        info "Found that the swarm is already initialized"
-        ucp_join_manager
-    fi
-    curl -sX PUT $API_BASE/session/destroy/$SID
 
 elif [[ $HOSTNAME =~ wrk ]]; then
     info "This is a worker node"
     consul_agent_init
-    swarm_wait_until_ready ucp ucp_swarm_initialized
     ucp_join_worker
 
 elif [[ $HOSTNAME =~ dtr ]]; then
     info "This is a DTR worker node"
     consul_agent_init
-    swarm_wait_until_ready ucp ucp_swarm_initialized
     ucp_join_worker
 
     SID=$(curl -sX PUT $API_BASE/session/create | jq -r '.ID')
@@ -276,6 +236,4 @@ elif [[ $HOSTNAME =~ dtr ]]; then
     fi
     curl -sX PUT $API_BASE/session/destroy/$SID
 fi
-
-# TODO: uncomment this when I know everything works
-#rm /tmp/swarm_init.sh
+info "CONFIGURATION COMPLETE"

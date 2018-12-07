@@ -4,6 +4,6 @@ A Terraform Module for to run Docker Enterprise Edition (EE) on vSphere using Te
 ````
 export TF_VAR_vsphere_password=<vsphere password>
 export TF_VAR_root_password=<image root password>
-terraform init -backend-config=pod1.init
+terraform init
 terraform apply -var-file pod1.tfvars
 ````
