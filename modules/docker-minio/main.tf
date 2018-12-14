@@ -14,23 +14,23 @@ resource "random_string" "minio_secret_key" {
   special = false
 }
 
-data "vsphere_tag_category" "name" {
-  name = "Name"
-}
+#data "vsphere_tag_category" "name" {
+#  name = "Name"
+#}
 
-data "vsphere_tag_category" "role" {
-  name = "Role"
-}
+#data "vsphere_tag_category" "role" {
+#  name = "Role"
+#}
 
-resource "vsphere_tag" "name" {
-  name        = "${local.name}"
-  category_id = "${data.vsphere_tag_category.name.id}"
-}
+#resource "vsphere_tag" "name" {
+#  name        = "${local.name}"
+#  category_id = "${data.vsphere_tag_category.name.id}"
+#}
 
-resource "vsphere_tag" "role" {
-  name = "${local.name}"
-  category_id = "${data.vsphere_tag_category.role.id}"
-}
+#resource "vsphere_tag" "role" {
+#  name = "${local.name}"
+#  category_id = "${data.vsphere_tag_category.role.id}"
+#}
 
 data "vsphere_datacenter" "dc" {
   name = "${var.vsphere_datacenter}"
@@ -94,7 +94,7 @@ resource "vsphere_virtual_machine" "minio" {
     }
   }
 
-  tags = ["${vsphere_tag.name.*.id}", "${vsphere_tag.role.id}"]
+  # tags = ["${vsphere_tag.name.*.id}", "${vsphere_tag.role.id}"]
 
 # Run the configuration script
 provisioner "remote-exec" {
