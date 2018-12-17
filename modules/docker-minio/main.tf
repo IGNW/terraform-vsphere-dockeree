@@ -113,13 +113,12 @@ sudo apt-get install -y \
     curl \
     software-properties-common
 
+echo "{ \"insecure-registries\":[\"${docker_registry}\"] }" | sudo tee /etc/docker/daemon.json
 sudo service docker start
 
 # mount network storage
 sudo mkdir -p /mnt/data/dtr
 sudo mount -t nfs ${var.dtr_storage_host}:${var.dtr_storage_path} /mnt/data/dtr
-
-sudo docker pull ${var.docker_registry}/minio/minio
 
 sudo docker run -d -p ${local.minio_port}:${local.minio_port} --name minio --restart unless-stopped \
   -e "MINIO_ACCESS_KEY=${random_string.minio_access_key.result}" \
@@ -128,7 +127,7 @@ sudo docker run -d -p ${local.minio_port}:${local.minio_port} --name minio --res
   -e "MINIO_REGION=none" \
   -v /mnt/data:/data \
   -v /mnt/config:/root/.minio \
-  minio/minio server /data
+  ${docker_registry}/minio/minio server /data
 EOT
     ]
   }
