@@ -125,7 +125,7 @@ fi
 # mount network storage
 sudo mkdir -p /mnt/data/dtr
 
-if [ "${var.dtr_storage_host}" ];
+if [ -z "${var.dtr_storage_host}" ];
   sudo mount -t nfs ${var.dtr_storage_host}:${var.dtr_storage_path} /mnt/data/dtr
 fi
 

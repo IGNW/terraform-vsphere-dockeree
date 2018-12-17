@@ -135,7 +135,8 @@ variable "minio_root_volume_size" {
 }
 
 variable "dtr_storage_host" {
-  description = "Host with NFS share for DTR storage"
+  description = "Host with NFS share for DTR storage (omit to use local storage)"
+  default = ""
 }
 
 variable "dtr_storage_path" {
