@@ -234,6 +234,7 @@ elif [[ $HOSTNAME =~ dtr ]]; then
     consul_agent_init
     if [ -z "${docker_registry}" ]; then
       docker_pull_and_tag docker/dtr:latest
+    fi
     ucp_join_worker
 
     SID=$(curl -sX PUT $API_BASE/session/create | jq -r '.ID')
