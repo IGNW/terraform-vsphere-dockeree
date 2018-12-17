@@ -184,6 +184,8 @@ function dtr_join {
 
 # SCRIPT BEGINS
 
+echo "{ \"insecure-registries\":[\"${docker_registry}\"] } | sudo tee /etc/docker/daemon.json
+sudo systemctl restart docker
 docker pull ${docker_registry}/consul
 
 if [[ $HOSTNAME =~ mgr ]]; then
