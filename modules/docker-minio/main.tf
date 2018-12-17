@@ -114,7 +114,7 @@ sudo apt-get install -y \
     software-properties-common
 
 echo "{ \"insecure-registries\":[\"${var.docker_registry}\"] }" | sudo tee /etc/docker/daemon.json
-sudo service docker start
+sudo systemctl start docker
 
 # mount network storage
 sudo mkdir -p /mnt/data/dtr
