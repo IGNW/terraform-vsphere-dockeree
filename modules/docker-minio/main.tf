@@ -112,9 +112,15 @@ sudo apt-get install -y \
     ca-certificates \
     curl \
     software-properties-common
-
-echo "{ \"insecure-registries\":[\"${var.docker_registry}\"] }" | sudo tee /etc/docker/daemon.json
 sudo systemctl start docker
+
+if [ ${var.docker_registry} ]; then
+  echo "Configuring registry ${var.docker_registry} as an insecure registry"
+  echo "{ \"insecure-registries\":[\"${var.docker_registry}\"] }" | sudo tee /etc/docker/daemon.json
+  minio=""${var.docker_registry}/minio/minio"
+else
+  minio="minio/minio"
+fi
 
 # mount network storage
 sudo mkdir -p /mnt/data/dtr
