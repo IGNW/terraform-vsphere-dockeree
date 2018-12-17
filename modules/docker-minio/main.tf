@@ -113,7 +113,7 @@ sudo apt-get install -y \
     curl \
     software-properties-common
 
-echo "{ \"insecure-registries\":[\"${docker_registry}\"] }" | sudo tee /etc/docker/daemon.json
+echo "{ \"insecure-registries\":[\"${var.docker_registry}\"] }" | sudo tee /etc/docker/daemon.json
 sudo service docker start
 
 # mount network storage
@@ -127,7 +127,7 @@ sudo docker run -d -p ${local.minio_port}:${local.minio_port} --name minio --res
   -e "MINIO_REGION=none" \
   -v /mnt/data:/data \
   -v /mnt/config:/root/.minio \
-  ${docker_registry}/minio/minio server /data
+  ${var.docker_registry}/minio/minio server /data
 EOT
     ]
   }
