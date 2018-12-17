@@ -192,6 +192,7 @@ function docker_pull_and_tag {
 
 function docker_pull_ucp_components {
   docker_pull_and_tag docker/ucp-swarm:$UCP_VERSION
+  docker_pull_and_tag docker/ucp-etcd:$UCP_VERSION
   docker_pull_and_tag docker/ucp-hrm:$UCP_VERSION
   docker_pull_and_tag docker/ucp-controller:$UCP_VERSION
   docker_pull_and_tag docker/ucp-agent:$UCP_VERSION
