@@ -2,6 +2,7 @@
 # This script initializes Consul, UCP, and DTR clusters.
 # Further nodes are joined after the initial server/manager nodes are created.
 
+set -e
 API_BASE="http://127.0.0.1:8500/v1"
 ADV_IP=$(/sbin/ip -f inet addr show dev ens160 | grep -Po 'inet \K[\d.]+')
 UCP_VERSION=2.2.5
