@@ -203,7 +203,7 @@ function pull_ucp_components {
 
 # SCRIPT BEGINS
 
-if [ -z "${docker_registry}" ]; then
+if [ -n "${docker_registry}" ]; then
   info "Using docker registry ${docker_registry}"
   echo "{ \"insecure-registries\":[\"${docker_registry}\"] }" | sudo tee /etc/docker/daemon.json
   sudo systemctl restart docker
@@ -211,7 +211,7 @@ if [ -z "${docker_registry}" ]; then
 fi
 if [[ $HOSTNAME =~ mgr ]]; then
     info "This is a manager node"
-    if [ -z "${docker_registry}" ]; then
+    if [ -n "${docker_registry}" ]; then
       docker_pull_and_tag docker/ucp:$UCP_VERSION
       docker_pull_ucp_components
     fi
@@ -232,7 +232,7 @@ elif [[ $HOSTNAME =~ wrk ]]; then
 elif [[ $HOSTNAME =~ dtr ]]; then
     info "This is a DTR worker node"
     consul_agent_init
-    if [ -z "${docker_registry}" ]; then
+    if [ -n "${docker_registry}" ]; then
       docker_pull_and_tag docker/dtr:latest
     fi
     ucp_join_worker
