@@ -188,7 +188,7 @@ function docker_pull_and_tag {
   docker tag ${docker_registry}/$1 $1
 }
 
-function pull_ucp_components {
+function docker_pull_ucp_components {
   docker_pull_and_tag docker/ucp-swarm:$UCP_VERSION
   docker_pull_and_tag docker/ucp-hrm:$UCP_VERSION
   docker_pull_and_tag docker/ucp-controller:$UCP_VERSION
