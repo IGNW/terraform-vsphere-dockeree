@@ -117,6 +117,7 @@ sudo systemctl start docker
 if [ ${var.docker_registry} ]; then
   echo "Configuring registry ${var.docker_registry} as an insecure registry"
   echo "{ \"insecure-registries\":[\"${var.docker_registry}\"] }" | sudo tee /etc/docker/daemon.json
+  sudo systemctl restart docker
   minio="${var.docker_registry}/minio/minio"
 else
   minio="minio/minio"
