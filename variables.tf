@@ -142,3 +142,8 @@ variable "dtr_storage_path" {
   description = "Path to NFS share on storage host"
   default = "/data/dtr"
 }
+
+variable "docker_registry" {
+  description = "Path from which to pull docker images"
+  default = "docker.io"
+}

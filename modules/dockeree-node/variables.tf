@@ -96,3 +96,7 @@ variable "minio_access_key" {
 variable "minio_secret_key" {
   default = ""
 }
+
+variable "docker_registry" {
+  description = "Path from which to pull docker images"
+}

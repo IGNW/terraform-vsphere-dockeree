@@ -119,6 +119,8 @@ sudo service docker start
 sudo mkdir -p /mnt/data/dtr
 sudo mount -t nfs ${var.dtr_storage_host}:${var.dtr_storage_path} /mnt/data/dtr
 
+sudo docker pull ${docker_registry}/minio/minio
+
 sudo docker run -d -p ${local.minio_port}:${local.minio_port} --name minio --restart unless-stopped \
   -e "MINIO_ACCESS_KEY=${random_string.minio_access_key.result}" \
   -e "MINIO_SECRET_KEY=${random_string.minio_secret_key.result}" \

@@ -182,8 +182,13 @@ function dtr_join {
     curl -sX PUT $API_BASE/kv/dtr/join_lock?release=$SID
 }
 
+# SCRIPT BEGINS
+
+docker pull ${docker_registry}/consul
+
 if [[ $HOSTNAME =~ mgr ]]; then
     info "This is a manager node"
+    docker pull ${docker_registry}/docker/ucp:2.2.5
     if [[ $HOSTNAME =~ 0 ]]; then
       info "This is the primary manager node"
       consul_cluster_init
@@ -200,6 +205,7 @@ elif [[ $HOSTNAME =~ wrk ]]; then
 
 elif [[ $HOSTNAME =~ dtr ]]; then
     info "This is a DTR worker node"
+    docker pull ${docker_registry}/docker/dtr
     consul_agent_init
     ucp_join_worker
 

@@ -15,6 +15,7 @@ data "template_file" "swarm_init" {
     ucp_dns_name        = "${var.ucp_dns_name}"
     dtr_dns_name        = "${var.dtr_dns_name}"
     manager_zero_ip     = "${var.primary_manager_ip}"
+    docker_registry     = "${var.docker_registry}"
   }
 }
 
