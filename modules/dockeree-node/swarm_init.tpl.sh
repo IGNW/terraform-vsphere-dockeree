@@ -11,6 +11,10 @@ function timestamp {
   echo $(date "+%F %T")
 }
 
+function debug {
+  echo "$(timestamp) DEBUG:  $HOSTNAME $1"
+}
+
 function info {
   echo "$(timestamp) INFO:  $HOSTNAME $1"
 }
@@ -147,12 +151,18 @@ function dtr_install {
         --ucp-url https://${manager_zero_ip} \
         --dtr-external-url https://$ADV_IP
 
-    info "Applying Minio config"
-    apt-get intstall python-pip
-    pip install requests
-    /tmp/config_dtr_minio.sh
 
+    debug "Installing pip"
+    debug "$(apt-get intstall python-pip)"
+    debug "Installing \'requests\'"
+    debug "$(pip install requests)"
+    info "Applying Minio config"
+    echo "$(/tmp/config_dtr_minio.sh)"
+    debug "Done applying minio config"
+
+    debug "Putting replica ID into KV"
     curl -sX PUT -d "$REPLICA_ID" $API_BASE/kv/dtr/replica_id
+    debug "Marking swarm initialization as complute in KV"
     curl -sX PUT -d "$HOSTNAME.node.consul" "$API_BASE/kv/dtr_swarm_initialized?release=$SID&flags=2"
     info "Finished initializing the DTR swarm"
 }
