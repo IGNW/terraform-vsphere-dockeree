@@ -146,5 +146,5 @@ variable "dtr_storage_path" {
 
 variable "docker_registry" {
   description = "Path from which to pull docker images"
-  default = "docker.io"
+  default = ""
 }
