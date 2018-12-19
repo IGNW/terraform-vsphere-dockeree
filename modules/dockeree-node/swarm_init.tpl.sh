@@ -153,11 +153,11 @@ function dtr_install {
 
 
     debug "Installing pip"
-    debug "$(apt-get install python-pip 2>&1)"
+    sudo apt-get install -y python-pip 2>&1
     debug "Installing \'requests\'"
-    debug "$(pip install requests 2>&1)"
+    sudo pip install requests 2>&1
     info "Applying Minio config"
-    echo "$(/tmp/config_dtr_minio.sh 2>&1)"
+    /tmp/config_dtr_minio.sh 2>&1
     debug "Done applying minio config"
 
     debug "Putting replica ID into KV"
