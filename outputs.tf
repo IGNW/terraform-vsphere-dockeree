@@ -15,9 +15,9 @@ output "minio_address" {
 }
 
 output "ucp_url" {
-  value = "https://${module.docker-manager-primary.public_ips[0]}:443"
+  value = "https://${module.docker-manager-primary.public_ips[0]}"
 }
 
 output "dtr_url" {
-  value = "https://${module.docker-dtr.public_ips[0]}:443"
+  value = "https://${module.docker-dtr.public_ips[0]}"
 }
