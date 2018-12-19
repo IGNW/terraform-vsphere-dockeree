@@ -190,7 +190,7 @@ function dtr_join {
         --ucp-password '${ucp_admin_password}' \
         --existing-replica-id $REPLICA_ID \
         --ucp-insecure-tls \
-        --ucp-url https://${ucp_dns_name}
+        --ucp-url https://${manager_zero_ip}
 
     info "Releasing DTR join lock."
     curl -sX PUT $API_BASE/kv/dtr/join_lock?release=$SID
