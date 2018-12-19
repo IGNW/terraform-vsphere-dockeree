@@ -153,16 +153,16 @@ function dtr_install {
 
 
     debug "Installing pip"
-    debug "$(apt-get intstall python-pip)"
+    debug "$(apt-get install python-pip 2>&1)"
     debug "Installing \'requests\'"
-    debug "$(pip install requests)"
+    debug "$(pip install requests 2>&1)"
     info "Applying Minio config"
-    echo "$(/tmp/config_dtr_minio.sh)"
+    echo "$(/tmp/config_dtr_minio.sh 2>&1)"
     debug "Done applying minio config"
 
     debug "Putting replica ID into KV"
     curl -sX PUT -d "$REPLICA_ID" $API_BASE/kv/dtr/replica_id
-    debug "Marking swarm initialization as complute in KV"
+    debug "Marking swarm initialization as complete in KV"
     curl -sX PUT -d "$HOSTNAME.node.consul" "$API_BASE/kv/dtr_swarm_initialized?release=$SID&flags=2"
     info "Finished initializing the DTR swarm"
 }
