@@ -47,7 +47,7 @@ variable "manager_vcpu" {
 
 variable "manager_memory_mb" {
   description = "Memory (in MB) for manager nodes"
-  default = 4000
+  default = 6000
 }
 
 variable "manager_node_count" {
@@ -67,7 +67,7 @@ variable "worker_vcpu" {
 
 variable "worker_memory_mb" {
   description = "Memory (in MB) for worker nodes"
-  default = 4000
+  default = 6000
 }
 
 variable "worker_node_count" {
@@ -92,7 +92,7 @@ variable "dtr_vcpu" {
 
 variable "dtr_memory_mb" {
   description = "Memory (in MB) for DTR nodes"
-  default = 4000
+  default = 6000
 }
 
 variable "dtr_root_volume_size" {
@@ -126,7 +126,7 @@ variable "minio_vcpu" {
 
 variable "minio_memory_mb" {
   description = "Memory (in MB) for DTR nodes"
-  default = 4000
+  default = 6000
 }
 
 variable "minio_root_volume_size" {
@@ -142,11 +142,6 @@ variable "dtr_storage_host" {
 variable "dtr_storage_path" {
   description = "Path to NFS share on storage host"
   default = "/data/dtr"
-}
-
-variable "docker_registry" {
-  description = "Path from which to pull docker images"
-  default = ""
 }
 
 variable "ucp_version" {
