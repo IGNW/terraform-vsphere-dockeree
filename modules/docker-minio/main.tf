@@ -106,13 +106,6 @@ provisioner "remote-exec" {
 inline = [
 <<EOT
 set -x
-sudo apt-get update -y
-sudo apt-get install -y \
-    apt-transport-https \
-    ca-certificates \
-    curl \
-    software-properties-common
-sudo systemctl start docker
 
 # mount network storage
 sudo mkdir -p /mnt/data/dtr
