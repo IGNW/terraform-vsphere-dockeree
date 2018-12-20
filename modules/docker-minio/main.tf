@@ -114,15 +114,6 @@ sudo apt-get install -y \
     software-properties-common
 sudo systemctl start docker
 
-if [ -n "${var.docker_registry}" ]; then
-  echo "Configuring registry ${var.docker_registry} as an insecure registry"
-  echo "{ \"insecure-registries\":[\"${var.docker_registry}\"] }" | sudo tee /etc/docker/daemon.json
-  sudo systemctl restart docker
-  minio="${var.docker_registry}/minio/minio"
-else
-  minio="minio/minio"
-fi
-
 # mount network storage
 sudo mkdir -p /mnt/data/dtr
 
@@ -137,7 +128,7 @@ sudo docker run -d -p ${local.minio_port}:${local.minio_port} --name minio --res
   -e "MINIO_REGION=none" \
   -v /mnt/data:/data \
   -v /mnt/config:/root/.minio \
-  $minio server /data
+  minio/minio server /data
 EOT
     ]
   }
