@@ -148,3 +148,8 @@ variable "docker_registry" {
   description = "Path from which to pull docker images"
   default = ""
 }
+
+variable "ucp_version" {
+  description = "Version of the UCP to install"
+  default = "3.1.1"
+}

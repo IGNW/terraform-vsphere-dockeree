@@ -97,6 +97,7 @@ variable "minio_secret_key" {
   default = ""
 }
 
-variable "docker_registry" {
-  description = "Path from which to pull docker images"
+variable "ucp_version" {
+  description = "Version of the UCP to install"
+  default = ""
 }

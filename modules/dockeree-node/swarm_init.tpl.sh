@@ -5,7 +5,6 @@
 set -e
 API_BASE="http://127.0.0.1:8500/v1"
 ADV_IP=$(/sbin/ip -f inet addr show dev ens160 | grep -Po 'inet \K[\d.]+')
-UCP_VERSION=2.2.5
 
 function timestamp {
   echo $(date "+%F %T")
@@ -86,7 +85,7 @@ function create_ucp_swarm {
     info "Creating UCP swarm"
     docker container run --rm -it --name ucp \
         -v /var/run/docker.sock:/var/run/docker.sock \
-        docker/ucp:2.2.5 install \
+        docker/ucp:${ucp_version} install \
         --host-address ens160 \
         --admin-username ${ucp_admin_username} \
         --admin-password ${ucp_admin_password} \
@@ -196,40 +195,10 @@ function dtr_join {
     curl -sX PUT $API_BASE/kv/dtr/join_lock?release=$SID
 }
 
-function docker_pull_and_tag {
-  info "Pulling $1"
-  docker pull ${docker_registry}/$1
-  docker tag ${docker_registry}/$1 $1
-}
-
-function docker_pull_ucp_components {
-  docker_pull_and_tag docker/ucp-swarm:$UCP_VERSION
-  docker_pull_and_tag docker/ucp-etcd:$UCP_VERSION
-  docker_pull_and_tag docker/ucp-hrm:$UCP_VERSION
-  docker_pull_and_tag docker/ucp-controller:$UCP_VERSION
-  docker_pull_and_tag docker/ucp-agent:$UCP_VERSION
-  docker_pull_and_tag docker/ucp-auth:$UCP_VERSION
-  docker_pull_and_tag docker/ucp-auth-store:$UCP_VERSION
-  docker_pull_and_tag docker/ucp-metrics:$UCP_VERSION
-  docker_pull_and_tag docker/ucp-cfssl:$UCP_VERSION
-  docker_pull_and_tag docker/ucp-dsinfo:$UCP_VERSION
-  docker_pull_and_tag docker/ucp-compose:$UCP_VERSION
-}
-
 # SCRIPT BEGINS
 
-if [ -n "${docker_registry}" ]; then
-  info "Using docker registry ${docker_registry}"
-  echo "{ \"insecure-registries\":[\"${docker_registry}\"] }" | sudo tee /etc/docker/daemon.json
-  sudo systemctl restart docker
-  docker_pull_and_tag consul:latest
-fi
 if [[ $HOSTNAME =~ mgr ]]; then
     info "This is a manager node"
-    if [ -n "${docker_registry}" ]; then
-      docker_pull_and_tag docker/ucp:$UCP_VERSION
-      docker_pull_ucp_components
-    fi
     if [[ $HOSTNAME =~ 0 ]]; then
       info "This is the primary manager node"
       consul_cluster_init
@@ -247,9 +216,6 @@ elif [[ $HOSTNAME =~ wrk ]]; then
 elif [[ $HOSTNAME =~ dtr ]]; then
     info "This is a DTR worker node"
     consul_agent_init
-    if [ -n "${docker_registry}" ]; then
-      docker_pull_and_tag docker/dtr:latest
-    fi
     ucp_join_worker
 
     SID=$(curl -sX PUT $API_BASE/session/create | jq -r '.ID')

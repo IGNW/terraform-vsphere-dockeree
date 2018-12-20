@@ -22,7 +22,6 @@ module "docker-manager-primary" {
   vsphere_compute_cluster = "${var.vsphere_compute_cluster}"
   vsphere_network         = "${var.vsphere_network}"
   vsphere_folder          = "${var.vsphere_folder}"
-  docker_registry         = "${var.docker_registry}"
 
   disk_template           = "${var.vm_template}"
   terraform_password      = "${var.terraform_password}"
@@ -34,6 +33,7 @@ module "docker-manager-primary" {
   ucp_admin_username      = "${var.ucp_admin_username}"
   ucp_admin_password      = "${var.ucp_admin_password}"
   node_count              = "1"
+  ucp_version             = "${var.ucp_version}"
 }
 
 module "docker-manager" {
@@ -49,7 +49,6 @@ module "docker-manager" {
   vsphere_compute_cluster = "${var.vsphere_compute_cluster}"
   vsphere_network         = "${var.vsphere_network}"
   vsphere_folder          = "${var.vsphere_folder}"
-  docker_registry         = "${var.docker_registry}"
 
   disk_template           = "${var.vm_template}"
   terraform_password      = "${var.terraform_password}"
@@ -77,7 +76,6 @@ module "docker-worker" {
   vsphere_compute_cluster = "${var.vsphere_compute_cluster}"
   vsphere_network         = "${var.vsphere_network}"
   vsphere_folder          = "${var.vsphere_folder}"
-  docker_registry         = "${var.docker_registry}"
 
   disk_template           = "${var.vm_template}"
   terraform_password      = "${var.terraform_password}"
@@ -104,7 +102,6 @@ module "docker-dtr" {
   vsphere_compute_cluster = "${var.vsphere_compute_cluster}"
   vsphere_network         = "${var.vsphere_network}"
   vsphere_folder          = "${var.vsphere_folder}"
-  docker_registry         = "${var.docker_registry}"
 
   disk_template           = "${var.vm_template}"
   terraform_password      = "${var.terraform_password}"
@@ -134,7 +131,6 @@ module "minio" {
   vsphere_compute_cluster = "${var.vsphere_compute_cluster}"
   vsphere_network         = "${var.vsphere_network}"
   vsphere_folder          = "${var.vsphere_folder}"
-  docker_registry         = "${var.docker_registry}"
 
   disk_template           = "${var.vm_template}"
   terraform_password      = "${var.terraform_password}"
