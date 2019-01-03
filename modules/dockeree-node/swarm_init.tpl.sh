@@ -201,6 +201,7 @@ if [[ $HOSTNAME =~ mgr ]]; then
     info "This is a manager node"
     if [[ $HOSTNAME =~ 0 ]]; then
       info "This is the primary manager node"
+      curl -sX DELETE "$API_BASE/kv/dtr_swarm_initialized"
       consul_cluster_init
       create_ucp_swarm
     else
