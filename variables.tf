@@ -146,5 +146,5 @@ variable "dtr_storage_path" {
 
 variable "ucp_version" {
   description = "Version of the UCP to install"
-  default = "3.1.1"
+  default = "2.2.14"
 }
