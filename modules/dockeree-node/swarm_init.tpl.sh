@@ -156,6 +156,10 @@ function dtr_install {
     curl -sX PUT -d "$HOSTNAME.node.consul" "$API_BASE/kv/dtr_swarm_initialized?release=$SID&flags=2"
     info "Finished initializing the DTR swarm"
 
+    debug "Installing pip"
+    sudo apt-get install -y python-pip 2>&1
+    debug "Installing \'requests\'"
+    sudo pip install requests 2>&1
     info Configuring Minio
     /tmp/config_dtr_minio.sh 2>&1
     debug "Done applying minio config"
