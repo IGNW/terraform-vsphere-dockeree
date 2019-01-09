@@ -150,20 +150,20 @@ function dtr_install {
         --ucp-url https://${manager_zero_ip} \
         --dtr-external-url https://$ADV_IP
 
+    debug "Putting replica ID into KV"
+    curl -sX PUT -d "$REPLICA_ID" $API_BASE/kv/dtr/replica_id
+    debug "Marking swarm initialization as complete in KV"
+    curl -sX PUT -d "$HOSTNAME.node.consul" "$API_BASE/kv/dtr_swarm_initialized?release=$SID&flags=2"
+    info "Finished initializing the DTR swarm"
 
     debug "Installing pip"
+    sudo apt-get update
     sudo apt-get install -y python-pip 2>&1
     debug "Installing \'requests\'"
     sudo pip install requests 2>&1
     info "Applying Minio config"
     /tmp/config_dtr_minio.sh 2>&1
     debug "Done applying minio config"
-
-    debug "Putting replica ID into KV"
-    curl -sX PUT -d "$REPLICA_ID" $API_BASE/kv/dtr/replica_id
-    debug "Marking swarm initialization as complete in KV"
-    curl -sX PUT -d "$HOSTNAME.node.consul" "$API_BASE/kv/dtr_swarm_initialized?release=$SID&flags=2"
-    info "Finished initializing the DTR swarm"
 }
 
 function dtr_join {
