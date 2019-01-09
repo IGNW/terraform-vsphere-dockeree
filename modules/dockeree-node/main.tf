@@ -125,7 +125,7 @@ resource "vsphere_virtual_machine" "dockeree" {
     destination = "/tmp/swarm_init.sh"
   }
 
-  provision "file" {
+  provisioner "file" {
     connection = {
       type          = "ssh"
       user          = "terraform"
