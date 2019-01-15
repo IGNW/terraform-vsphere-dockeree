@@ -117,8 +117,8 @@ resource "vsphere_virtual_machine" "dockeree" {
   provisioner "file" {
     connection = {
       type          = "ssh"
-      user          = "terraform"
-      password = "${var.ssh_password}"
+      user          = "${var.ssh_username}"
+      password      = "${var.ssh_password}"
     }
 
     content     = "${data.template_file.swarm_init.rendered}"
@@ -128,7 +128,7 @@ resource "vsphere_virtual_machine" "dockeree" {
   provisioner "file" {
     connection = {
       type          = "ssh"
-      user = "${var.ssh_username}"
+      user     =
       password = "${var.ssh_password}"
   }
 
