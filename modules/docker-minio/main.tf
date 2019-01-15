@@ -100,8 +100,8 @@ resource "vsphere_virtual_machine" "minio" {
 provisioner "remote-exec" {
   connection = {
   type = "ssh"
-  user = "terraform"
-  password = "${var.terraform_password}"
+  user = "${var.ssh_username}"
+  password = "${var.ssh_password}"
 }
 inline = [
 <<EOT

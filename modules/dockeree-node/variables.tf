@@ -16,8 +16,12 @@ variable "primary_manager_ip" {
   default = ""
 }
 
-variable "terraform_password" {
-  description = "Password for the 'terraform' account configured on the disk image"
+variable "ssh_username" {
+  description = "Username with passwordless sudo privileges on disk image"
+}
+
+variable "ssh_password" {
+  description = "password for the account given in ssh_username"
 }
 
 variable "domain" {

@@ -112,11 +112,14 @@ variable "ucp_admin_password" {
 
 variable "vm_template" {
   description = "VM template to use"
-  default = "CentOS_7_Template"
 }
 
-variable "terraform_password" {
-  description = "password for the terraform user account (for ssh)"
+variable "ssh_username" {
+  description = "Username with passwordless sudo privileges on disk image"
+}
+
+variable "ssh_password" {
+  description = "password for the account given in ssh_username"
 }
 
 variable "minio_vcpu" {

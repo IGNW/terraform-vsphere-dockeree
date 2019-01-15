@@ -128,8 +128,8 @@ resource "vsphere_virtual_machine" "dockeree" {
   provisioner "file" {
     connection = {
       type          = "ssh"
-      user          = "terraform"
-      password = "${var.terraform_password}"
+      user = "${var.ssh_username}"
+      password = "${var.ssh_password}"
   }
 
   source     = "${path.module}/utils"
@@ -138,9 +138,9 @@ resource "vsphere_virtual_machine" "dockeree" {
 
   provisioner "file" {
     connection = {
-      type          = "ssh"
-      user          = "terraform"
-      password = "${var.terraform_password}"
+      type     = "ssh"
+      user     = "${var.ssh_username}"
+      password = "${var.ssh_password}"
     }
 
     content     = "${data.template_file.config_dtr_minio.rendered}"
@@ -149,9 +149,9 @@ resource "vsphere_virtual_machine" "dockeree" {
 
   provisioner "remote-exec" {
     connection = {
-      type          = "ssh"
-      user          = "terraform"
-      password = "${var.terraform_password}"
+      type     = "ssh"
+      user     = "${var.ssh_username}"
+      password = "${var.ssh_password}"
     }
 
     inline = [

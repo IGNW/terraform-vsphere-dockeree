@@ -24,7 +24,8 @@ module "docker-manager-primary" {
   vsphere_folder          = "${var.vsphere_folder}"
 
   disk_template           = "${var.vm_template}"
-  terraform_password      = "${var.terraform_password}"
+  ssh_username            = "${var.ssh_username}"
+  ssh_password            = "${var.ssh_password}"
   domain                  = "${var.domain}"
   node_vcpu               = "${var.manager_vcpu}"
   node_memory             = "${var.manager_memory_mb}"
@@ -51,7 +52,8 @@ module "docker-manager" {
   vsphere_folder          = "${var.vsphere_folder}"
 
   disk_template           = "${var.vm_template}"
-  terraform_password      = "${var.terraform_password}"
+  ssh_username            = "${var.ssh_username}"
+  ssh_password            = "${var.ssh_password}"
   domain                  = "${var.domain}"
   node_vcpu               = "${var.manager_vcpu}"
   node_memory             = "${var.manager_memory_mb}"
@@ -59,7 +61,6 @@ module "docker-manager" {
   consul_secret           = "${random_id.consul_secret.b64_std}"
   ucp_admin_username      = "${var.ucp_admin_username}"
   ucp_admin_password      = "${var.ucp_admin_password}"
-  # ucp_dns_name          = "${var.ucp_dns_name}"
 
   node_count              = "${var.manager_node_count - 1}"
 }
@@ -78,7 +79,8 @@ module "docker-worker" {
   vsphere_folder          = "${var.vsphere_folder}"
 
   disk_template           = "${var.vm_template}"
-  terraform_password      = "${var.terraform_password}"
+  ssh_username            = "${var.ssh_username}"
+  ssh_password            = "${var.ssh_password}"
   domain                  = "${var.domain}"
   node_vcpu               = "${var.worker_vcpu}"
   node_memory             = "${var.worker_memory_mb}"
@@ -104,7 +106,8 @@ module "docker-dtr" {
   vsphere_folder          = "${var.vsphere_folder}"
 
   disk_template           = "${var.vm_template}"
-  terraform_password      = "${var.terraform_password}"
+  ssh_username            = "${var.ssh_username}"
+  ssh_password            = "${var.ssh_password}"
   domain                  = "${var.domain}"
   node_vcpu               = "${var.dtr_vcpu}"
   node_memory             = "${var.dtr_memory_mb}"
@@ -133,7 +136,8 @@ module "minio" {
   vsphere_folder          = "${var.vsphere_folder}"
 
   disk_template           = "${var.vm_template}"
-  terraform_password      = "${var.terraform_password}"
+  ssh_username            = "${var.ssh_username}"
+  ssh_password            = "${var.ssh_password}"
   domain                  = "${var.domain}"
   node_vcpu               = "${var.minio_vcpu}"
   node_memory             = "${var.minio_memory_mb}"
