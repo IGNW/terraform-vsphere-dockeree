@@ -23,7 +23,7 @@ module "docker-manager-primary" {
   vsphere_network         = "${var.vsphere_network}"
   vsphere_folder          = "${var.vsphere_folder}"
 
-  disk_template           = "${var.vm_template}"
+  vm_template             = "${var.vm_template}"
   ssh_username            = "${var.ssh_username}"
   ssh_password            = "${var.ssh_password}"
   domain                  = "${var.domain}"
@@ -51,7 +51,7 @@ module "docker-manager" {
   vsphere_network         = "${var.vsphere_network}"
   vsphere_folder          = "${var.vsphere_folder}"
 
-  disk_template           = "${var.vm_template}"
+  vm_template             = "${var.vm_template}"
   ssh_username            = "${var.ssh_username}"
   ssh_password            = "${var.ssh_password}"
   domain                  = "${var.domain}"
@@ -78,7 +78,7 @@ module "docker-worker" {
   vsphere_network         = "${var.vsphere_network}"
   vsphere_folder          = "${var.vsphere_folder}"
 
-  disk_template           = "${var.vm_template}"
+  vm_template             = "${var.vm_template}"
   ssh_username            = "${var.ssh_username}"
   ssh_password            = "${var.ssh_password}"
   domain                  = "${var.domain}"
@@ -105,7 +105,7 @@ module "docker-dtr" {
   vsphere_network         = "${var.vsphere_network}"
   vsphere_folder          = "${var.vsphere_folder}"
 
-  disk_template           = "${var.vm_template}"
+  vm_template             = "${var.vm_template}"
   ssh_username            = "${var.ssh_username}"
   ssh_password            = "${var.ssh_password}"
   domain                  = "${var.domain}"
@@ -135,7 +135,7 @@ module "minio" {
   vsphere_network         = "${var.vsphere_network}"
   vsphere_folder          = "${var.vsphere_folder}"
 
-  disk_template           = "${var.vm_template}"
+  vm_template             = "${var.vm_template}"
   ssh_username            = "${var.ssh_username}"
   ssh_password            = "${var.ssh_password}"
   domain                  = "${var.domain}"

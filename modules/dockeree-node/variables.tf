@@ -52,8 +52,8 @@ variable "vsphere_compute_cluster" {
   description = "vSphere compute cluster on which to run vms"
 }
 
-variable "disk_template" {
-  description = "vSphere disk to use as a template"
+variable "vm_template" {
+  description = "vSphere template to use for configuring disk"
 }
 
 variable "vsphere_network" {
