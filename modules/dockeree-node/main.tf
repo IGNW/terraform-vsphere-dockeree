@@ -118,7 +118,7 @@ resource "vsphere_virtual_machine" "dockeree" {
     connection = {
       type          = "ssh"
       user          = "terraform"
-      password = "${var.terraform_password}"
+      password = "${var.ssh_password}"
     }
 
     content     = "${data.template_file.swarm_init.rendered}"
