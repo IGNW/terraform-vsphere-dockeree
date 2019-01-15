@@ -128,8 +128,8 @@ resource "vsphere_virtual_machine" "dockeree" {
   provisioner "file" {
     connection = {
       type          = "ssh"
-      user     =
-      password = "${var.ssh_password}"
+      user          = ${var.ssh_username}"
+      password      = "${var.ssh_password}"
   }
 
   source     = "${path.module}/utils"
