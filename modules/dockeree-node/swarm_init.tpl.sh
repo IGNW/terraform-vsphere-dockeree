@@ -137,10 +137,6 @@ function dtr_install {
     REPLICA_ID=$(od -vN 6 -An -tx1 /dev/urandom | tr -d " \n")
     info "Using random replica ID:$REPLICA_ID"
 
-    # Add a hosts entry so that this works before the load balancer is up
-    MGR_IP=$(dig +short ucpmgr.service.consul | head -1 | tr -d " \n")
-    echo "$MGR_IP ${manager_zero_ip}" >> /etc/hosts
-
     docker run -it --rm docker/dtr install \
         --ucp-node $HOSTNAME \
         --ucp-username '${ucp_admin_username}' \
