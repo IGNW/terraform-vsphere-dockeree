@@ -33,7 +33,7 @@ data "template_file" "docker_util" {
     manager_zero_ip     = "${var.primary_manager_ip}"
     ucp_version         = "${var.ucp_version}"
   }
-
+}
 
 data "template_file" "config_dtr_minio" {
   template = "${file("${path.module}/config_dtr_minio.tpl.py")}"
