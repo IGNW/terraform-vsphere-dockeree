@@ -6,7 +6,7 @@ set -e
 API_BASE="http://127.0.0.1:8500/v1"
 ADV_IP=$(/sbin/ip -f inet addr show dev ens160 | grep -Po 'inet \K[\d.]+')
 
-source docker_util.sh
+source $(dirname "$0")/docker_util.sh
 
 if [[ $HOSTNAME =~ mgr ]]; then
     info "This is a manager node"
