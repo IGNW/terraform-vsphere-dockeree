@@ -19,6 +19,22 @@ data "template_file" "swarm_init" {
   }
 }
 
+data "template_file" "docker_util" {
+  template = "${file("${path.module}/docker_util.tpl.sh")}"
+
+  vars {
+    environment         = "${var.environment}"
+    role                = "${local.name_prefix}"
+    consul_secret       = "${var.consul_secret}"
+    ucp_admin_username  = "${var.ucp_admin_username}"
+    ucp_admin_password  = "${var.ucp_admin_password}"
+    ucp_dns_name        = "${var.ucp_dns_name}"
+    dtr_dns_name        = "${var.dtr_dns_name}"
+    manager_zero_ip     = "${var.primary_manager_ip}"
+    ucp_version         = "${var.ucp_version}"
+  }
+
+
 data "template_file" "config_dtr_minio" {
   template = "${file("${path.module}/config_dtr_minio.tpl.py")}"
 
@@ -130,9 +146,20 @@ resource "vsphere_virtual_machine" "dockeree" {
       type          = "ssh"
       user          = "${var.ssh_username}"
       password      = "${var.ssh_password}"
+    }
+
+    content     = "${data.template_file.docker_util.rendered}"
+    destination = "/tmp/docker_util.sh"
   }
 
-  source     = "${path.module}/utils"
+  provisioner "file" {
+    connection = {
+      type          = "ssh"
+      user          = "${var.ssh_username}"
+      password      = "${var.ssh_password}"
+  }
+
+  source     = "${path.module}/scripts/utils"
   destination = "/tmp/"
   }
 
