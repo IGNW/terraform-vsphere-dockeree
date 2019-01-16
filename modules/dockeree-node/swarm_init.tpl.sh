@@ -133,18 +133,22 @@ function swarm_wait_until_ready {
 
 function dtr_install {
     wait_for_ucp_manager
-    info "Starting DTR install"
-    REPLICA_ID=$(od -vN 6 -An -tx1 /dev/urandom | tr -d " \n")
-    info "Using random replica ID:$REPLICA_ID"
 
-    docker run -it --rm docker/dtr install \
+    until [ $DTR_STATUS -eq 0 ]; do
+      info "Attempting to start DTR"
+      set -x
+      docker run -it --rm  docker/dtr install \
         --ucp-node $HOSTNAME \
         --ucp-username '${ucp_admin_username}' \
         --ucp-password '${ucp_admin_password}' \
         --ucp-insecure-tls \
-        --replica-id $REPLICA_ID \
-        --ucp-url https://${manager_zero_ip} \
-        --dtr-external-url https://$ADV_IP
+        --ucp-url https://${manager_zero_ip}
+      DTR_STATUS=$?
+      set +x
+      if [ $DTR_STATUS -ne 0 ]; then
+        error "DTR failed to start.  Trying again."
+      fi
+    done
 
     debug "Putting replica ID into KV"
     curl -sX PUT -d "$REPLICA_ID" $API_BASE/kv/dtr/replica_id
