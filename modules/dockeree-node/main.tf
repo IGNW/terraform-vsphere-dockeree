@@ -4,7 +4,7 @@ locals {
 }
 
 data "template_file" "swarm_init" {
-  template = "${file("${path.module}/swarm_init.tpl.sh")}"
+  template = "${file("${path.module}/scripts/swarm_init.tpl.sh")}"
 
   vars {
     environment         = "${var.environment}"
@@ -20,7 +20,7 @@ data "template_file" "swarm_init" {
 }
 
 data "template_file" "docker_util" {
-  template = "${file("${path.module}/docker_util.tpl.sh")}"
+  template = "${file("${path.module}/scripts/docker_util.tpl.sh")}"
 
   vars {
     environment         = "${var.environment}"
@@ -36,7 +36,7 @@ data "template_file" "docker_util" {
 }
 
 data "template_file" "config_dtr_minio" {
-  template = "${file("${path.module}/config_dtr_minio.tpl.py")}"
+  template = "${file("${path.module}/scripts/config_dtr_minio.tpl.py")}"
 
   vars {
     ucp_admin_username  = "${var.ucp_admin_username}"
