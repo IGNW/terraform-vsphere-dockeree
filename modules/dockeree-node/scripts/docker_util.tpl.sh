@@ -131,7 +131,7 @@ function dtr_install {
     DTR_ATTEMPTS=0
     until [ "$DTR_STATUS" -eq 0 ]; do
       info "Attempting to start DTR"
-      set -x
+      set +e
       docker run -it --rm  --name dtr docker/dtr install \
         --ucp-node $HOSTNAME \
         --ucp-username '${ucp_admin_username}' \
@@ -152,7 +152,7 @@ function dtr_install {
         fi
       fi
     done
-
+    set -e
     debug "Putting replica ID into KV"
     curl -sX PUT -d "$REPLICA_ID" $API_BASE/kv/dtr/replica_id
     debug "Marking swarm initialization as complete in KV"
