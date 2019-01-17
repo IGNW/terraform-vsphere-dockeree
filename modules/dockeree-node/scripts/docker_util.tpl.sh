@@ -129,7 +129,7 @@ function dtr_install {
     sleep 15
     DTR_STATUS=1
     DTR_ATTEMPTS=0
-    until [ "$DTR_ID" -eq 0 ]; do
+    until [ "$DTR_STATUS" -eq 0 ]; do
       info "Attempting to start DTR"
       set -x
       docker run -it --rm  --name dtr docker/dtr install \
