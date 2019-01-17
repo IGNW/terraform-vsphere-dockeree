@@ -126,7 +126,10 @@ function swarm_wait_until_ready {
 function dtr_install {
     wait_for_ucp_manager
 
-    until [ -n "$DTR_ID" ]; do
+    sleep 15
+    DTR_STATUS=1
+    DTR_ATTEMPTS=0
+    until [ "$DTR_ID" -eq 0 ]; do
       info "Attempting to start DTR"
       set -x
       docker run -it --rm  --name dtr docker/dtr install \
@@ -135,11 +138,18 @@ function dtr_install {
         --ucp-password '${ucp_admin_password}' \
         --ucp-insecure-tls \
         --ucp-url https://${manager_zero_ip}
+      DTR_STATUS=$?
       set +x
-      DTR_ID=$(docker ps -q -f "name=dtr")
-      debug "DTR_ID=$DTR_ID"
-      if [ -z "$DTR_ID" ]; then
-        error "DTR failed to start.  Trying again."
+      debug "DTR STATUS $DTR_STATUS"
+      if [ "$DTR_STATUS" -ne 0 ]; then
+        DTR_ATTEMPTS=$((DTR_ATTEMPTS + 1))
+        if [ $DTR_ATTEMPTS -gt 5 ]; then
+          error "DTR failed too many times.  Exiting."
+          exit 1
+        else
+          error "DTR failed to start.  Trying again."
+          sleep 15
+        fi
       fi
     done
 
