@@ -1,6 +1,5 @@
 locals {
-  name_prefix = "dockeree-${var.environment}-${var.node_type}"
-  hostname_prefix = "dockeree-${var.node_type}"
+  hostname_prefix = "dockeree-${var.environment}-${var.node_type}"
 }
 
 data "template_file" "swarm_init" {
@@ -8,7 +7,6 @@ data "template_file" "swarm_init" {
 
   vars {
     environment         = "${var.environment}"
-    role                = "${local.name_prefix}"
     consul_secret       = "${var.consul_secret}"
     ucp_admin_username  = "${var.ucp_admin_username}"
     ucp_admin_password  = "${var.ucp_admin_password}"
@@ -24,7 +22,6 @@ data "template_file" "docker_util" {
 
   vars {
     environment         = "${var.environment}"
-    role                = "${local.name_prefix}"
     consul_secret       = "${var.consul_secret}"
     ucp_admin_username  = "${var.ucp_admin_username}"
     ucp_admin_password  = "${var.ucp_admin_password}"
@@ -71,27 +68,6 @@ data "vsphere_virtual_machine" "template" {
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 
-#data "vsphere_tag_category" "name" {
-#  name = "Name"
-#}
-
-#data "vsphere_tag_category" "role" {
-#  name = "Role"
-#}
-
-#resource "vsphere_tag" "name" {
-#  count       = "${var.node_count}"
-#  name        = "${local.hostname_prefix}-${var.start_id + count.index}"
-#  category_id = "${data.vsphere_tag_category.name.id}"
-#}
-
-#resource "vsphere_tag" "role" {
-#  count = "${1 - var.start_id}"
-#
-#  name = "${local.name_prefix}"
-#  category_id = "${data.vsphere_tag_category.role.id}"
-#}
-
 resource "vsphere_virtual_machine" "dockeree" {
   count                   = "${var.node_count}"
 
@@ -126,9 +102,6 @@ resource "vsphere_virtual_machine" "dockeree" {
         dns_suffix_list = ["${var.domain}"]
     }
   }
-
-  # tags = ["${element(vsphere_tag.name.*.id, count.index)}", "${vsphere_tag.role.id}"]
-  # tags = ["${element(vsphere_tag.name.*.id, count.index)}"]
 
   provisioner "file" {
     connection = {

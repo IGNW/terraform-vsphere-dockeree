@@ -1,5 +1,5 @@
 locals {
-  name        = "docker-minio-${var.environment}"
+  name        = "docker-${var.environment}-minio"
   disk_dev    = "/dev/xvdf"
   minio_port  = 9000
 }
