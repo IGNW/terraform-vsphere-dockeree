@@ -1,5 +1,5 @@
 provider "vsphere" {
-  version              = "1.9.0"
+  version              = "1.9.1"
   vsphere_server       = "${var.vsphere_server}"
   user                 = "${var.vsphere_user}"
   password             = "${var.vsphere_password}"
