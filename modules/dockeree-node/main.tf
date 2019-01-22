@@ -147,6 +147,16 @@ resource "vsphere_virtual_machine" "dockeree" {
     destination = "/tmp/config_dtr_minio.sh"
   }
 
+  provisioner "file" {
+    connection = {
+      type     = "ssh"
+      user     = "${var.ssh_username}"
+      password = "${var.ssh_password}"
+    }
+    source      = "certs/domain.cert"
+    destination = "/etc/docker/certs.d/myregistrydomain.com:5000/ca.crt"
+  }
+
   provisioner "remote-exec" {
     connection = {
       type     = "ssh"
