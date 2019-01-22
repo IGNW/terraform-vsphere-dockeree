@@ -138,7 +138,7 @@ function dtr_install {
         --ucp-password '${ucp_admin_password}' \
         --ucp-insecure-tls \
         --ucp-url https://${manager_zero_ip} \
-        --dtr-external-url ${ADV_IP}
+        --dtr-external-url $ADV_IP
       DTR_STATUS=$?
       set +x
       debug "DTR STATUS $DTR_STATUS"
