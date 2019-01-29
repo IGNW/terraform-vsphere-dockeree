@@ -34,7 +34,7 @@ resource "vsphere_virtual_machine" "dockeree" {
   resource_pool_id   = "${data.vsphere_compute_cluster.cluster.resource_pool_id}"
   datastore_id       = "${data.vsphere_datastore.datastore.id}"
 
-  num_cpus   = "${var.node_vcpu}"
+  num_cpus = "${var.node_vcpu}"
   memory = "${var.node_memory}"
   memory_reservation = "${var.node_memory}"
   guest_id = "${data.vsphere_virtual_machine.template.guest_id}"
@@ -56,8 +56,9 @@ resource "vsphere_virtual_machine" "dockeree" {
           domain    = "${var.domain}"
         }
         network_interface {}
-        dns_server_list = ["8.8.8.8"]
-        dns_suffix_list = ["${var.domain}"]
+        # dns_server_list = ["8.8.8.8"]
+        # dns_suffix_list = ["${var.domain}"]
     }
   }
+
 }
