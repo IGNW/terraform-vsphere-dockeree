@@ -1,23 +1,23 @@
-output "manager_public_ips" {
-  value = "${concat(module.docker-manager-primary.public_ips, module.docker-manager.public_ips)}"
+output "manager_ips" {
+  value = "${module.docker-manager.node_ips}"
 }
 
-output "worker_public_ips" {
-  value = "${module.docker-worker.public_ips}"
+output "worker_ips" {
+  value = "${module.docker-worker.node_ips}"
 }
 
-output "dtr_public_ips" {
-  value = "${module.docker-dtr.public_ips}"
+output "dtr_ips" {
+  value = "${module.docker-dtr.node_ips}"
 }
 
-output "minio_address" {
+output "minio_ip" {
   value = "${module.minio.public_ip}"
 }
 
 output "ucp_url" {
-  value = "https://${module.docker-manager-primary.public_ips[0]}"
+  value = "https://${module.docker-manager.node_ips[0]}"
 }
 
 output "dtr_url" {
-  value = "https://${module.docker-dtr.public_ips[0]}"
+  value = "https://${module.docker-dtr.node_ips[0]}"
 }
