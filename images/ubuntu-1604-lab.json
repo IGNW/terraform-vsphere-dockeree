@@ -1,0 +1,65 @@
+{
+    "variables": {
+	"vcenter_server_ip": "10.254.252.5",
+	"vcenter-name": "POC"
+},
+    "builders": [
+    {
+    "type": "vsphere-iso",
+    "vcenter_server": "{{user `vcenter_server_ip`}}",
+    "insecure_connection": "true",
+    "username": "administrator@vsphere.local",
+    "password": "Ignw!098",
+    "cluster": "POC",
+    "datastore": "IGNW-POC",
+    "vm_name": "ubuntu1604_template_packer",
+    "vm_version": "11",
+    "folder": "Templates/Packer",
+    "disk_thin_provisioned": "true",
+    "convert_to_template": "true",
+    "guest_os_type": "ubuntu64Guest",
+    "disk_size": "20480",
+    "cpus": 2,
+    "ram": "2048",
+    "network": "ignw-poc|vmtesting|servers",
+    "network_card": "vmxnet3",
+    "iso_paths": [
+      "[IGNW-POC] ISO/ubuntu-16.04.5-server-amd64.iso"
+    ],
+
+    "boot_wait": "5s",
+    "boot_command": [
+	"<enter><wait>",
+	"<wait><f6><wait><esc><wait>",
+	"<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+	"<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+	"<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+	"<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+	"<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+	"<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+	"<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+	"<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+	"<bs><bs><bs>",
+	"/install/vmlinuz ",
+	"initrd=/install/initrd.gz ",
+	"auto-install/enable=true ",
+	"debconf/priority=critical ",
+	"preseed/url=http://10.50.0.25:80/ks/preseed-1604.cfg",
+	"<enter>"
+      ],
+    "ssh_timeout": "30m",
+    "ssh_username": "terraform",
+    "ssh_password": "changeme1",
+    "shutdown_command": "sudo systemctl poweroff"
+ }],
+  "provisioners": [
+    {
+      "type": "shell",
+      "execute_command": "echo 'terraform' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "scripts": [
+        "scripts/sudo.sh",
+        "scripts/install_docker_ee.sh"
+      ]
+    }
+ ]
+}
