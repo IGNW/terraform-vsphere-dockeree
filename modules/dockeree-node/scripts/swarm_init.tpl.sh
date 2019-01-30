@@ -4,7 +4,7 @@
 
 set -e
 API_BASE="http://127.0.0.1:8500/v1"
-ADV_IP=$(/sbin/ip -f inet addr show dev ens160 | grep -Po 'inet \K[\d.]+')
+ADV_IP=$(/sbin/ip -f inet addr show dev eth0 | grep -Po 'inet \K[\d.]+')
 
 source $(dirname "$0")/docker_util.sh
 
