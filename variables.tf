@@ -129,7 +129,7 @@ variable "minio_vcpu" {
 
 variable "minio_memory_mb" {
   description = "Memory (in MB) for DTR nodes"
-  default = 6000
+  default = 16000
 }
 
 variable "minio_root_volume_size" {
