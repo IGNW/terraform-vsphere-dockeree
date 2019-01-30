@@ -8,7 +8,7 @@
     "password": "Cisco1234!",
     "cluster": "pod1-hx",
     "datastore": "Primary",
-    "vm_name": "ubuntu1604_template_packer",
+    "vm_name": "ubuntu1604_template_matt",
     "vm_version": "11",
     "folder": "Templates/Packer",
     "disk_thin_provisioned": "true",
