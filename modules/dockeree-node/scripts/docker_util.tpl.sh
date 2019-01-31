@@ -53,7 +53,7 @@ function wait_for_consul_leader {
 }
 
 function wait_for_ucp_manager {
-    until $(curl -k --output /dev/null --silent --head --fail https://ucpmgr.service.consul); do
+    until $(curl -k --noproxy "*" --output /dev/null --silent --head --fail https://ucpmgr.service.consul); do
         info "Waiting for existing UCP manager to be reachable via HTTPS"
         sleep 15
     done
