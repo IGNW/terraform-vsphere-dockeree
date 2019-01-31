@@ -78,7 +78,7 @@ function create_ucp_swarm {
     docker container run --rm -it --name ucp \
         -v /var/run/docker.sock:/var/run/docker.sock \
         docker/ucp:${ucp_version} install \
-        --host-address ens160 \
+        --host-address  $ADV_IP\
         --admin-username ${ucp_admin_username} \
         --admin-password ${ucp_admin_password} \
 
