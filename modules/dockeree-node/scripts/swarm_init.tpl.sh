@@ -62,4 +62,14 @@ elif [[ $HOSTNAME =~ dtr ]]; then
     fi
     curl -sX PUT $API_BASE/session/destroy/$SID
 fi
+
+# We may have configured a proxy for the Docker service in order to download
+# consul, upc, and dtr - and their dependencies.  If so, we want to clear it
+# now as the Cluster should run without any proxying
+
+rm /etc/systemd/system/docker.service.d/http-proxy.conf
+systemctl restart docker
+
+
+
 info "CONFIGURATION COMPLETE"
