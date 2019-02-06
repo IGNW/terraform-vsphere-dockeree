@@ -106,11 +106,6 @@ variable "ucp_version" {
   default = ""
 }
 
-variable "ucp_version" {
-  description = "Version of the UCP to install"
-  default = "3.1.3"
-}
-
 variable "dtr_version" {
   description = "Version of the DTR to install"
   default = ""
