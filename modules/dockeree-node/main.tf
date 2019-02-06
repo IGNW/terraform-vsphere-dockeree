@@ -29,6 +29,8 @@ data "template_file" "docker_util" {
     dtr_dns_name        = "${var.dtr_dns_name}"
     manager_zero_ip     = "${var.primary_manager_ip}"
     ucp_version         = "${var.ucp_version}"
+    dtr_version         = "${var.dtr_version}"
+    consul_version      = "${var.consul_version}"
   }
 }
 

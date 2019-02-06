@@ -105,3 +105,17 @@ variable "ucp_version" {
   description = "Version of the UCP to install"
   default = ""
 }
+
+variable "ucp_version" {
+  description = "Version of the UCP to install"
+  default = "3.1.3"
+}
+
+variable "dtr_version" {
+  description = "Version of the DTR to install"
+  default = ""
+}
+
+variable "consul_version" {
+  description = "Version of Consul to install"
+}

@@ -17,7 +17,7 @@ function error {
 function consul_cluster_init {
   info "Initializing Consul cluster"
   docker run -d --net=host --name consul \
-      consul agent -server \
+      consul:${consul_version} agent -server \
       -bind="0.0.0.0" \
       -advertise="$ADV_IP" \
       -data-dir='/tmp' \
@@ -28,7 +28,7 @@ function consul_cluster_init {
 function consul_server_init {
     info "Initializing Consul server"
     docker run -d --net=host --name consul \
-        consul agent -server \
+        consul:${consul_version} agent -server \
         -bind="0.0.0.0" \
         -advertise="$ADV_IP" \
         -data-dir='/tmp' \
@@ -63,7 +63,7 @@ function wait_for_ucp_manager {
 function consul_agent_init {
     info "Initializing Consul agent"
     docker run -d --net=host --name consul \
-        consul agent \
+        consul:${consul_version} agent \
         -bind="0.0.0.0" \
         -advertise="$ADV_IP" \
         -data-dir='/tmp' \
@@ -132,7 +132,7 @@ function dtr_install {
     until [ "$DTR_STATUS" -eq 0 ]; do
       info "Attempting to start DTR"
       set +e
-      docker run -it --rm  --name dtr docker/dtr install \
+      docker run -it --rm  --name dtr docker/dtr:${dtr_version} install \
         --ucp-node $HOSTNAME \
         --ucp-username '${ucp_admin_username}' \
         --ucp-password '${ucp_admin_password}' \
@@ -182,7 +182,7 @@ function dtr_join {
     MGR_IP=$(dig +short ucpmgr.service.consul | head -1 | tr -d " \n")
     echo "$MGR_IP ${ucp_dns_name}" >> /etc/hosts
 
-    docker run -it --rm docker/dtr join \
+    docker run -it --rm docker/dtr:${dtr_version} join \
         --ucp-node $HOSTNAME \
         --ucp-username '${ucp_admin_username}' \
         --ucp-password '${ucp_admin_password}' \

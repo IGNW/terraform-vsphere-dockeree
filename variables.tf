@@ -149,5 +149,15 @@ variable "dtr_storage_path" {
 
 variable "ucp_version" {
   description = "Version of the UCP to install"
-  default = "2.2.14"
+  default = "3.1.3"
+}
+
+variable "dtr_version" {
+  description = "Version of the DTR to install"
+  default = "2.6.1"
+}
+
+variable "consul_version" {
+  description = "Version of Consul to install"
+  default = "1.4.2"
 }

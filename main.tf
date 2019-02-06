@@ -35,6 +35,7 @@ module "docker-manager-primary" {
   ucp_admin_password      = "${var.ucp_admin_password}"
   node_count              = "1"
   ucp_version             = "${var.ucp_version}"
+  consul_version          = "${var.consul_version}"
 }
 
 module "docker-manager" {
@@ -63,6 +64,8 @@ module "docker-manager" {
   ucp_admin_password      = "${var.ucp_admin_password}"
 
   node_count              = "${var.manager_node_count - 1}"
+  ucp_version             = "${var.ucp_version}"
+  consul_version          = "${var.consul_version}"
 }
 
 module "docker-worker" {
@@ -90,6 +93,7 @@ module "docker-worker" {
   ucp_admin_password      = "${var.ucp_admin_password}"
 
   node_count              = "${var.worker_node_count}"
+  consul_version          = "${var.consul_version}"
 }
 
 # Docker Trusted Registry
@@ -123,6 +127,8 @@ module "docker-dtr" {
    minio_secret_key        = "${module.minio.secret_key}"
 
    node_count              = "${var.dtr_node_count}"
+   dtr_version             = "${var.dtr_version}"
+   consul_version          = "${var.consul_version}"
 }
 
 module "minio" {
