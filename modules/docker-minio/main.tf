@@ -121,7 +121,7 @@ sudo docker run -d -p ${local.minio_port}:${local.minio_port} --name minio --res
   -e "MINIO_REGION=none" \
   -v /mnt/data:/data \
   -v /mnt/config:/root/.minio \
-  minio/minio server /data
+  minio/minio:${var.minio_version} server /data
 EOT
     ]
   }

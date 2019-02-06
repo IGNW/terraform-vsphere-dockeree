@@ -151,4 +151,5 @@ module "minio" {
   consul_secret           = "${random_id.consul_secret.b64_std}"
   dtr_storage_host        = "${var.dtr_storage_host}"
   dtr_storage_path        = "${var.dtr_storage_path}"
+  minio_version           = "${var.minio_version}"
 }

@@ -59,3 +59,7 @@ variable "dtr_storage_path" {
   description = "Path to NFS share on storage host"
   default = "/data/dtr"
 }
+
+variable "minio_version" {
+  description = "Version of Minio to install"
+}

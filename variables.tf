@@ -161,3 +161,8 @@ variable "consul_version" {
   description = "Version of Consul to install"
   default = "1.4.2"
 }
+
+variable "minio_version" {
+  description = "Version of Minio to install"
+  default = "RELEASE.2019-01-31T00-31-19Z"
+}
