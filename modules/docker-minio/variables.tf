@@ -46,11 +46,6 @@ variable "vsphere_datacenter" {
   description = ""
 }
 
-variable "consul_secret" {
-  description = "The secret key to use for encryption of Consul network traffic"
-  type = "string"
-}
-
 variable "dtr_storage_host" {
   description = "Host with NFS share for DTR storage"
 }

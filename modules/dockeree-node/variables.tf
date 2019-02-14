@@ -68,27 +68,12 @@ variable "vsphere_datacenter" {
   description = ""
 }
 
-variable "consul_secret" {
-  description = "The secret key to use for encryption of Consul network traffic"
-  type = "string"
-}
-
 variable "ucp_admin_username" {
   description = "Username for the UCP administrator account."
 }
 
 variable "ucp_admin_password" {
   description = "Password for the UCP administrator account."
-}
-
-variable "ucp_dns_name" {
-  description = "DNS name for the load balancer in front of the UCP manager."
-  default     = ""
-}
-
-variable "dtr_dns_name" {
-  description = "DNS name for the load balancer in front of the DTR nodes."
-  default     = ""
 }
 
 variable "minio_endpoint" {
