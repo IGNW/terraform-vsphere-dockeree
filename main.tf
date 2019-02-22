@@ -100,7 +100,8 @@ module "manager-init" {
   source = "github.com/IGNW/terraform-ssh-dockeree-init"
 
   node_count         = "${var.manager_node_count}"
-  node_ips           = "${module.docker-manager.node_ips}"
+  public_ips         = "${module.docker-manager.node_ips}"
+  private_ips         = "${module.docker-manager.node_ips}"
   resource_ids       = "${module.docker-manager.resource_ids}"
   node_type          = "mgr"
   ssh_username       = "${var.ssh_username}"
@@ -116,7 +117,8 @@ module "worker-init" {
   source = "github.com/IGNW/terraform-ssh-dockeree-init"
 
   node_count         = "${var.worker_node_count}"
-  node_ips           = "${module.docker-worker.node_ips}"
+  public_ips         = "${module.docker-manager.node_ips}"
+  private_ips         = "${module.docker-manager.node_ips}"
   resource_ids       = "${module.docker-worker.resource_ids}"
   node_type          = "wrk"
   ssh_username       = "${var.ssh_username}"
@@ -129,7 +131,8 @@ module "dtr-init" {
   source = "github.com/IGNW/terraform-ssh-dockeree-init"
 
   node_count         = "${var.dtr_node_count}"
-  node_ips           = "${module.docker-dtr.node_ips}"
+  public_ips         = "${module.docker-manager.node_ips}"
+  private_ips         = "${module.docker-manager.node_ips}"
   resource_ids       = "${module.docker-dtr.resource_ids}"
   node_type          = "dtr"
   ssh_username       = "${var.ssh_username}"
