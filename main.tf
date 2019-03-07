@@ -31,6 +31,7 @@ module "docker-manager" {
   root_volume_size        = "${var.manager_root_volume_size}"
   thin_provisioned        = "${var.thin_provisioned}"
   eagerly_scrub           = "${var.eagerly_scrub}"
+  scsi_type               = "${var.scsi_type}"
   ucp_admin_username      = "${var.ucp_admin_username}"
   ucp_admin_password      = "${var.ucp_admin_password}"
 
@@ -60,6 +61,7 @@ module "docker-worker" {
   root_volume_size        = "${var.worker_root_volume_size}"
   thin_provisioned         = "${var.thin_provisioned}"
   eagerly_scrub           = "${var.eagerly_scrub}"
+  scsi_type               = "${var.scsi_type}"
   ucp_admin_username      = "${var.ucp_admin_username}"
   ucp_admin_password      = "${var.ucp_admin_password}"
 
@@ -88,6 +90,7 @@ module "docker-dtr" {
   root_volume_size        = "${var.dtr_root_volume_size}"
   thin_provisioned         = "${var.thin_provisioned}"
   eagerly_scrub           = "${var.eagerly_scrub}"
+  scsi_type               = "${var.scsi_type}"
   ucp_admin_username      = "${var.ucp_admin_username}"
   ucp_admin_password      = "${var.ucp_admin_password}"
 
@@ -172,6 +175,7 @@ module "minio" {
   root_volume_size        = "${var.minio_root_volume_size}"
   thin_provisioned         = "${var.thin_provisioned}"
   eagerly_scrub           = "${var.eagerly_scrub}"
+  scsi_type               = "${var.scsi_type}"
   dtr_storage_host        = "${var.dtr_storage_host}"
   dtr_storage_path        = "${var.dtr_storage_path}"
   minio_version           = "${var.minio_version}"

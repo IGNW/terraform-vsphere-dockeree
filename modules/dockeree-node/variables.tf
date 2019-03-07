@@ -107,3 +107,7 @@ variable "thin_provisioned" {
 variable "eagerly_scrub" {
   description = "Was the template created using the eagerly_scrub option (true/false)"
 }
+
+variable "scsi_type" {
+  default = "pvscsi"
+}

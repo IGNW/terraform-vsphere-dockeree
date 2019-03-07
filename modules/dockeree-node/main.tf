@@ -37,6 +37,7 @@ resource "vsphere_virtual_machine" "dockeree" {
   num_cpus = "${var.node_vcpu}"
   memory = "${var.node_memory}"
   memory_reservation = "${var.node_memory}"
+  scsi_type = "${var.scsi_type}"
   guest_id = "${data.vsphere_virtual_machine.template.guest_id}"
 
   network_interface {
