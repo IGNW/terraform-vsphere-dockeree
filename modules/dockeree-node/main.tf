@@ -45,6 +45,8 @@ resource "vsphere_virtual_machine" "dockeree" {
   disk {
       label = "disk0"
       size  = "${var.root_volume_size}"
+      thin_provisoned = "${var.thin_provisioned}"
+      eagerly_scrub   = "${var.eagerly_scrub}"
   }
 
   clone {

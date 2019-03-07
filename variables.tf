@@ -166,3 +166,13 @@ variable "minio_version" {
   description = "Version of Minio to install"
   default = "RELEASE.2019-01-31T00-31-19Z"
 }
+
+variable "thin_provisioned" {
+  description = "Was the template created using thin provisioning (true/false)"
+  default = "true"
+}
+
+variable "eagerly_scrub" {
+  description = "Was the template created using the eagerly_scrub option (true/false)"
+  default = "false"
+}
