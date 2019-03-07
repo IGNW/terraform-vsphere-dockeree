@@ -101,7 +101,7 @@ module "manager-init" {
 
   node_count         = "${var.manager_node_count}"
   public_ips         = "${module.docker-manager.node_ips}"
-  private_ips         = "${module.docker-manager.node_ips}"
+  private_ips        = "${module.docker-manager.node_ips}"
   resource_ids       = "${module.docker-manager.resource_ids}"
   node_type          = "mgr"
   ssh_username       = "${var.ssh_username}"
@@ -111,6 +111,8 @@ module "manager-init" {
   ucp_url            = "${module.docker-manager.node_ips[0]}"
   ucp_version        = "${var.ucp_version}"
   consul_secret      = "${random_id.consul_secret.b64_std}"
+  dtr_url            = "${module.docker-dtr.node_ips[0]}"
+  manager_ip         = "${module.docker-manager.node_ips[0]}"
 }
 
 module "worker-init" {
@@ -125,6 +127,8 @@ module "worker-init" {
   ssh_password       = "${var.ssh_password}"
   ucp_url            = "${module.docker-manager.node_ips[0]}"
   consul_secret      = "${random_id.consul_secret.b64_std}"
+  dtr_url            = "${module.docker-dtr.node_ips[0]}"
+  manager_ip         = "${module.docker-manager.node_ips[0]}"
 }
 
 module "dtr-init" {
@@ -139,6 +143,8 @@ module "dtr-init" {
   ssh_password       = "${var.ssh_password}"
   ucp_url            = "${module.docker-manager.node_ips[0]}"
   consul_secret      = "${random_id.consul_secret.b64_std}"
+  dtr_url            = "${module.docker-dtr.node_ips[0]}"
+  manager_ip         = "${module.docker-manager.node_ips[0]}"
 }
 
 module "minio" {
