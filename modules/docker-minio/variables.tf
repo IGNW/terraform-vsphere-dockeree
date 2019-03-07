@@ -58,3 +58,11 @@ variable "dtr_storage_path" {
 variable "minio_version" {
   description = "Version of Minio to install"
 }
+
+variable "thin_provisioned" {
+  description = "Was the template created using thin provisioning (true/false)"
+}
+
+variable "eagerly_scrub" {
+  description = "Was the template created using the eagerly_scrub option (true/false)"
+}
