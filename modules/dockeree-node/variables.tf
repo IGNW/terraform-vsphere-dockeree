@@ -48,7 +48,7 @@ variable "vsphere_datastore" {
   description = "vSphere datastore to use for vms"
 }
 
-variable "vsphere_compute_cluster" {
+variable "vsphere_cluster" {
   description = "vSphere compute cluster on which to run vms"
 }
 

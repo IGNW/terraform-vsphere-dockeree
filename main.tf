@@ -18,7 +18,7 @@ module "docker-manager" {
 
   vsphere_datacenter      = "${var.vsphere_datacenter}"
   vsphere_datastore       = "${var.vsphere_datastore}"
-  vsphere_compute_cluster = "${var.vsphere_compute_cluster}"
+  vsphere_cluster         = "${var.vsphere_cluster}"
   vsphere_network         = "${var.vsphere_network}"
   vsphere_folder          = "${var.vsphere_folder}"
 
@@ -45,7 +45,7 @@ module "docker-worker" {
 
   vsphere_datacenter      = "${var.vsphere_datacenter}"
   vsphere_datastore       = "${var.vsphere_datastore}"
-  vsphere_compute_cluster = "${var.vsphere_compute_cluster}"
+  vsphere_cluster         = "${var.vsphere_cluster}"
   vsphere_network         = "${var.vsphere_network}"
   vsphere_folder          = "${var.vsphere_folder}"
 
@@ -71,7 +71,7 @@ module "docker-dtr" {
 
   vsphere_datacenter      = "${var.vsphere_datacenter}"
   vsphere_datastore       = "${var.vsphere_datastore}"
-  vsphere_compute_cluster = "${var.vsphere_compute_cluster}"
+  vsphere_cluster         = "${var.vsphere_cluster}"
   vsphere_network         = "${var.vsphere_network}"
   vsphere_folder          = "${var.vsphere_folder}"
 
@@ -153,7 +153,7 @@ module "minio" {
 
   vsphere_datacenter      = "${var.vsphere_datacenter}"
   vsphere_datastore       = "${var.vsphere_datastore}"
-  vsphere_compute_cluster = "${var.vsphere_compute_cluster}"
+  vsphere_cluster         = "${var.vsphere_cluster}"
   vsphere_network         = "${var.vsphere_network}"
   vsphere_folder          = "${var.vsphere_folder}"
 
