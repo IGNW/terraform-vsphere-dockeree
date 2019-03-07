@@ -31,7 +31,7 @@ resource "vsphere_virtual_machine" "dockeree" {
 
   name               = "${local.hostname_prefix}-${var.start_id + count.index}"
   folder             = "${var.vsphere_folder}"
-  resource_pool_id   = "${data.vsphere_cluster.cluster.resource_pool_id}"
+  resource_pool_id   = "${data.vsphere_compute_cluster.cluster.resource_pool_id}"
   datastore_id       = "${data.vsphere_datastore.datastore.id}"
 
   num_cpus = "${var.node_vcpu}"
