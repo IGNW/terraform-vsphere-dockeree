@@ -162,28 +162,28 @@ module "dtr-init" {
   script_path        = "${var.script_path}"
 }
 
-module "minio" {
-  source                  = "modules/docker-minio"
-  environment             = "${var.environment}"
-
-  vsphere_datacenter      = "${var.vsphere_datacenter}"
-  vsphere_datastore       = "${var.vsphere_datastore}"
-  vsphere_cluster         = "${var.vsphere_cluster}"
-  vsphere_network         = "${var.vsphere_network}"
-  vsphere_folder          = "${var.vsphere_folder}"
-
-  vm_template             = "${var.vm_template}"
-  ssh_username            = "${var.ssh_username}"
-  ssh_password            = "${var.ssh_password}"
-  domain                  = "${var.domain}"
-  node_vcpu               = "${var.minio_vcpu}"
-  node_memory             = "${var.minio_memory_mb}"
-  root_volume_size        = "${var.minio_root_volume_size}"
-  thin_provisioned         = "${var.thin_provisioned}"
-  eagerly_scrub           = "${var.eagerly_scrub}"
-  scsi_type               = "${var.scsi_type}"
-  dtr_storage_host        = "${var.dtr_storage_host}"
-  dtr_storage_path        = "${var.dtr_storage_path}"
-  minio_version           = "${var.minio_version}"
-  script_path             = "${var.script_path}"
-}
+#module "minio" {
+#  source                  = "modules/docker-minio"
+# environment             = "${var.environment}"
+#
+#  vsphere_datacenter      = "${var.vsphere_datacenter}"
+#  vsphere_datastore       = "${var.vsphere_datastore}"
+#  vsphere_cluster         = "${var.vsphere_cluster}"
+#  vsphere_network         = "${var.vsphere_network}"
+#  vsphere_folder          = "${var.vsphere_folder}"
+#
+#  vm_template             = "${var.vm_template}"
+#  ssh_username            = "${var.ssh_username}"
+#  ssh_password            = "${var.ssh_password}"
+#  domain                  = "${var.domain}"
+#  node_vcpu               = "${var.minio_vcpu}"
+#  node_memory             = "${var.minio_memory_mb}"
+#  root_volume_size        = "${var.minio_root_volume_size}"
+#  thin_provisioned         = "${var.thin_provisioned}"
+#  eagerly_scrub           = "${var.eagerly_scrub}"
+#  scsi_type               = "${var.scsi_type}"
+#  dtr_storage_host        = "${var.dtr_storage_host}"
+#  dtr_storage_path        = "${var.dtr_storage_path}"
+#  minio_version           = "${var.minio_version}"
+#  script_path             = "${var.script_path}"
+#}
