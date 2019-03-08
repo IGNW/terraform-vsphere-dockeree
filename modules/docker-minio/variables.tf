@@ -70,3 +70,8 @@ variable "eagerly_scrub" {
 variable "scsi_type" {
   default = "pvscsi"
 }
+
+variable "script_path" {
+  description = "Location on VM to upload scripts for inline execution"
+  default = "/tmp"
+}

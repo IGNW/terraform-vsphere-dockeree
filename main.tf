@@ -38,6 +38,7 @@ module "docker-manager" {
   node_count              = "${var.manager_node_count}"
   ucp_version             = "${var.ucp_version}"
   consul_version          = "${var.consul_version}"
+  script_path             = "${var.script_path}"
 }
 
 module "docker-worker" {
@@ -67,6 +68,7 @@ module "docker-worker" {
 
   node_count              = "${var.worker_node_count}"
   consul_version          = "${var.consul_version}"
+  script_path             = "${var.script_path}"
 }
 
 # Docker Trusted Registry
@@ -101,6 +103,7 @@ module "docker-dtr" {
   node_count              = "${var.dtr_node_count}"
   dtr_version             = "${var.dtr_version}"
   consul_version          = "${var.consul_version}"
+  script_path             = "${var.script_path}"
 }
 
 # Run the scripts to initialize the Docker EE cluster
@@ -122,6 +125,7 @@ module "manager-init" {
   consul_secret      = "${random_id.consul_secret.b64_std}"
   dtr_url            = "${module.docker-dtr.node_ips[0]}"
   manager_ip         = "${module.docker-manager.node_ips[0]}"
+  script_path        = "${var.script_path}"
 }
 
 module "worker-init" {
@@ -138,6 +142,7 @@ module "worker-init" {
   consul_secret      = "${random_id.consul_secret.b64_std}"
   dtr_url            = "${module.docker-dtr.node_ips[0]}"
   manager_ip         = "${module.docker-manager.node_ips[0]}"
+  script_path        = "${var.script_path}"
 }
 
 module "dtr-init" {
@@ -154,6 +159,7 @@ module "dtr-init" {
   consul_secret      = "${random_id.consul_secret.b64_std}"
   dtr_url            = "${module.docker-dtr.node_ips[0]}"
   manager_ip         = "${module.docker-manager.node_ips[0]}"
+  script_path        = "${var.script_path}"
 }
 
 module "minio" {
@@ -179,4 +185,5 @@ module "minio" {
   dtr_storage_host        = "${var.dtr_storage_host}"
   dtr_storage_path        = "${var.dtr_storage_path}"
   minio_version           = "${var.minio_version}"
+  script_path             = "${var.script_path}"
 }
