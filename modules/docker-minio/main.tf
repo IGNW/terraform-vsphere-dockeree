@@ -105,7 +105,7 @@ provisioner "remote-exec" {
   type = "ssh"
   user = "${var.ssh_username}"
   password = "${var.ssh_password}"
-  script_path = "${var.script_path}"
+  script_path = "${var.script_path}/terraform"
 
 }
 inline = [
