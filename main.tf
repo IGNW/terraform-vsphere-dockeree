@@ -96,9 +96,9 @@ module "docker-dtr" {
   ucp_admin_username      = "${var.ucp_admin_username}"
   ucp_admin_password      = "${var.ucp_admin_password}"
 
-  minio_endpoint          = "${module.minio.minio_endpoint}"
-  minio_access_key        = "${module.minio.access_key}"
-  minio_secret_key        = "${module.minio.secret_key}"
+  #minio_endpoint          = "${module.minio.minio_endpoint}"
+  #minio_access_key        = "${module.minio.access_key}"
+  #minio_secret_key        = "${module.minio.secret_key}"
 
   node_count              = "${var.dtr_node_count}"
   dtr_version             = "${var.dtr_version}"
