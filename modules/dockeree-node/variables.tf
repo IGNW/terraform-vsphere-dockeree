@@ -76,16 +76,6 @@ variable "ucp_admin_password" {
   description = "Password for the UCP administrator account."
 }
 
-variable "minio_endpoint" {
-  default = ""
-}
-variable "minio_access_key" {
-  default = ""
-}
-variable "minio_secret_key" {
-  default = ""
-}
-
 variable "ucp_version" {
   description = "Version of the UCP to install"
   default = ""

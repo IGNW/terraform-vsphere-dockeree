@@ -19,7 +19,7 @@ module "docker-manager" {
   vsphere_datacenter      = "${var.vsphere_datacenter}"
   vsphere_datastore       = "${var.vsphere_datastore}"
   vsphere_cluster         = "${var.vsphere_cluster}"
-  vsphere_network         = "${var.vsphere_network}"
+  vsphere_network         = "${var.manager_vsphere_network}"
   vsphere_folder          = "${var.vsphere_folder}"
 
   vm_template             = "${var.vm_template}"
@@ -41,16 +41,46 @@ module "docker-manager" {
   script_path             = "${var.script_path}"
 }
 
-module "docker-worker" {
+module "docker-worker-a" {
   source                  = "modules/dockeree-node"
 
   node_type               = "wrk"
-  environment             = "${var.environment}"
+  environment             = "${var.environment}-${var.worker_a_label}"
 
   vsphere_datacenter      = "${var.vsphere_datacenter}"
   vsphere_datastore       = "${var.vsphere_datastore}"
   vsphere_cluster         = "${var.vsphere_cluster}"
-  vsphere_network         = "${var.vsphere_network}"
+  vsphere_network         = "${var.worker_a_vsphere_network}"
+  vsphere_folder          = "${var.vsphere_folder}"
+
+  vm_template             = "${var.vm_template}"
+  ssh_username            = "${var.ssh_username}"
+  ssh_password            = "${var.ssh_password}"
+  domain                  = "${var.domain}"
+  node_vcpu               = "${var.worker_vcpu}"
+  node_memory             = "${var.worker_memory_mb}"
+  root_volume_size        = "${var.worker_root_volume_size}"
+  thin_provisioned        = "${var.thin_provisioned}"
+  eagerly_scrub           = "${var.eagerly_scrub}"
+  scsi_type               = "${var.scsi_type}"
+  ucp_admin_username      = "${var.ucp_admin_username}"
+  ucp_admin_password      = "${var.ucp_admin_password}"
+
+  node_count              = "${var.worker_a_node_count}"
+  consul_version          = "${var.consul_version}"
+  script_path             = "${var.script_path}"
+}
+
+module "docker-worker-b" {
+  source                  = "modules/dockeree-node"
+
+  node_type               = "wrk"
+  environment             = "${var.environment}-${var.worker_b_label}"
+
+  vsphere_datacenter      = "${var.vsphere_datacenter}"
+  vsphere_datastore       = "${var.vsphere_datastore}"
+  vsphere_cluster         = "${var.vsphere_cluster}"
+  vsphere_network         = "${var.worker_b_vsphere_network}"
   vsphere_folder          = "${var.vsphere_folder}"
 
   vm_template             = "${var.vm_template}"
@@ -66,10 +96,12 @@ module "docker-worker" {
   ucp_admin_username      = "${var.ucp_admin_username}"
   ucp_admin_password      = "${var.ucp_admin_password}"
 
-  node_count              = "${var.worker_node_count}"
+  node_count              = "${var.worker_b_node_count}"
   consul_version          = "${var.consul_version}"
   script_path             = "${var.script_path}"
 }
+
+
 
 # Docker Trusted Registry
 module "docker-dtr" {
@@ -80,7 +112,7 @@ module "docker-dtr" {
   vsphere_datacenter      = "${var.vsphere_datacenter}"
   vsphere_datastore       = "${var.vsphere_datastore}"
   vsphere_cluster         = "${var.vsphere_cluster}"
-  vsphere_network         = "${var.vsphere_network}"
+  vsphere_network         = "${var.manager_vsphere_network}"
   vsphere_folder          = "${var.vsphere_folder}"
 
   vm_template             = "${var.vm_template}"
@@ -95,10 +127,6 @@ module "docker-dtr" {
   scsi_type               = "${var.scsi_type}"
   ucp_admin_username      = "${var.ucp_admin_username}"
   ucp_admin_password      = "${var.ucp_admin_password}"
-
-  #minio_endpoint          = "${module.minio.minio_endpoint}"
-  #minio_access_key        = "${module.minio.access_key}"
-  #minio_secret_key        = "${module.minio.secret_key}"
 
   node_count              = "${var.dtr_node_count}"
   dtr_version             = "${var.dtr_version}"
@@ -128,13 +156,30 @@ module "manager-init" {
   script_path        = "${var.script_path}"
 }
 
-module "worker-init" {
+module "worker-a-init" {
   source = "github.com/IGNW/terraform-ssh-dockeree-init"
 
-  node_count         = "${var.worker_node_count}"
-  public_ips         = "${module.docker-worker.node_ips}"
-  private_ips        = "${module.docker-worker.node_ips}"
-  resource_ids       = "${module.docker-worker.resource_ids}"
+  node_count         = "${var.worker_a_node_count}"
+  public_ips         = "${module.docker-worker-a.node_ips}"
+  private_ips        = "${module.docker-worker-a.node_ips}"
+  resource_ids       = "${module.docker-worker-a.resource_ids}"
+  node_type          = "wrk"
+  ssh_username       = "${var.ssh_username}"
+  ssh_password       = "${var.ssh_password}"
+  ucp_url            = "https://${module.docker-manager.node_ips[0]}"
+  consul_secret      = "${random_id.consul_secret.b64_std}"
+  dtr_url            = "https://${module.docker-dtr.node_ips[0]}"
+  manager_ip         = "${module.docker-manager.node_ips[0]}"
+  script_path        = "${var.script_path}"
+}
+
+module "worker-b-init" {
+  source = "github.com/IGNW/terraform-ssh-dockeree-init"
+
+  node_count         = "${var.worker_b_node_count}"
+  public_ips         = "${module.docker-worker-b.node_ips}"
+  private_ips        = "${module.docker-worker-b.node_ips}"
+  resource_ids       = "${module.docker-worker-b.resource_ids}"
   node_type          = "wrk"
   ssh_username       = "${var.ssh_username}"
   ssh_password       = "${var.ssh_password}"

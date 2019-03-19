@@ -22,8 +22,27 @@ variable "vsphere_cluster" {
   description = "vSphere compute cluster to use"
 }
 
-variable "vsphere_network" {
-  description = "vSphere network to which to connect vms"
+variable "manager_vsphere_network" {
+  description = "vSphere network to which to connect manager and dtr vms"
+}
+
+variable "worker_a_vsphere_network" {
+  description = "vSphere network to which to connect vms for worker group A"
+}
+
+variable "worker_b_vsphere_network" {
+  description = "vSphere network to which to connect vms for worker group B"
+  default = ""
+}
+
+variable "worker_a_label" {
+  description = "Label to apply to nodes in worker group 1"
+  default = "a"
+}
+
+variable "worker_b_label" {
+  description = "Label to apply to nodes in worker group 2"
+  default = "b"
 }
 
 variable "domain" {
@@ -70,9 +89,14 @@ variable "worker_memory_mb" {
   default = 6000
 }
 
-variable "worker_node_count" {
-  description = "Number of worker nodes to create."
+variable "worker_a_node_count" {
+  description = "Number of worker nodes to create in group A."
   default = 4
+}
+
+variable "worker_b_node_count" {
+  description = "Number of worker nodes to create in group B."
+  default = 0
 }
 
 variable "worker_root_volume_size" {
@@ -122,21 +146,6 @@ variable "ssh_password" {
   description = "password for the account given in ssh_username"
 }
 
-variable "minio_vcpu" {
-  description = "Number of virtual CPUs for DTR nodes"
-  default = 4
-}
-
-variable "minio_memory_mb" {
-  description = "Memory (in MB) for DTR nodes"
-  default = 6000
-}
-
-variable "minio_root_volume_size" {
-  description = "The size of the worker nodes' root volume in gigabytes."
-  default = 80
-}
-
 variable "dtr_storage_host" {
   description = "Host with NFS share for DTR storage (omit to use local storage)"
   default = ""
@@ -154,17 +163,12 @@ variable "ucp_version" {
 
 variable "dtr_version" {
   description = "Version of the DTR to install"
-  default = "2.6.1"
+  default = "2.6.2"
 }
 
 variable "consul_version" {
   description = "Version of Consul to install"
   default = "1.4.2"
-}
-
-variable "minio_version" {
-  description = "Version of Minio to install"
-  default = "RELEASE.2019-01-31T00-31-19Z"
 }
 
 variable "thin_provisioned" {
