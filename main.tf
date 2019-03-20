@@ -171,6 +171,7 @@ module "worker-a-init" {
   dtr_url            = "https://${module.docker-dtr.node_ips[0]}"
   manager_ip         = "${module.docker-manager.node_ips[0]}"
   script_path        = "${var.script_path}"
+  run_init           = "${var.run_init}"
 }
 
 module "worker-b-init" {
@@ -188,6 +189,7 @@ module "worker-b-init" {
   dtr_url            = "https://${module.docker-dtr.node_ips[0]}"
   manager_ip         = "${module.docker-manager.node_ips[0]}"
   script_path        = "${var.script_path}"
+  run_init           = "${var.run_init}"
 }
 
 module "dtr-init" {
@@ -208,4 +210,5 @@ module "dtr-init" {
   manager_ip         = "${module.docker-manager.node_ips[0]}"
   script_path        = "${var.script_path}"
   dtr_nfs_url        = "${var.dtr_nfs_url}"
+  run_init           = "${var.run_init}"
 }

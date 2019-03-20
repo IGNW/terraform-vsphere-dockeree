@@ -200,3 +200,8 @@ variable "script_path" {
   description = "Location on VM to upload scripts for inline execution"
   default = "/tmp"
 }
+
+variable = "run_init" {
+  description = "Set to 0 to skip running init scripts"
+  default = "1"
+}
