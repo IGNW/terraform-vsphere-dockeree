@@ -201,7 +201,7 @@ variable "script_path" {
   default = "/tmp"
 }
 
-variable = "run_init" {
+variable "run_init" {
   description = "Set to 0 to skip running init scripts"
   default = "1"
 }
