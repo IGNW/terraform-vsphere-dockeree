@@ -14,8 +14,8 @@ variable "vsphere_datacenter" {
   description = "vSphere datacenter to connect to"
 }
 
-variable "vsphere_datastore" {
-  description = "vsphere datastore"
+variable "manager_vsphere_datastore" {
+  description = "vsphere datastore for manager and DTR nodes"
 }
 
 variable "manager_vsphere_cluster" {
@@ -26,6 +26,15 @@ variable "manager_vsphere_network" {
   description = "vSphere network to which to connect manager and dtr vms"
 }
 
+variable "worker_a_label" {
+  description = "Label to apply to nodes in worker group 1"
+  default = "a"
+}
+
+variable "worker_a_vsphere_datastore" {
+  description = "vsphere datastore for worker group A"
+}
+
 variable "worker_a_vsphere_cluster" {
   description = "vSphere compute cluster to use for worker group A"
 }
@@ -34,22 +43,22 @@ variable "worker_a_vsphere_network" {
   description = "vSphere network to which to connect vms for worker group A"
 }
 
-variable "worker_a_label" {
-  description = "Label to apply to nodes in worker group 1"
-  default = "a"
+variable "worker_b_label" {
+  description = "Label to apply to nodes in worker group N"
+  default = "b"
 }
+
+variable "worker_b_vsphere_datastore" {
+  description = "vsphere datastore for worker group B"
+}
+
 variable "worker_b_vsphere_cluster" {
-  description = "vSphere compute cluster to use for worker group A"
+  description = "vSphere compute cluster to use for worker group B"
 }
 
 variable "worker_b_vsphere_network" {
   description = "vSphere network to which to connect vms for worker group B"
   default = ""
-}
-
-variable "worker_b_label" {
-  description = "Label to apply to nodes in worker group 2"
-  default = "b"
 }
 
 variable "domain" {

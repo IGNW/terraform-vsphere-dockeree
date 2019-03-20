@@ -17,7 +17,7 @@ module "docker-manager" {
   environment             = "${var.environment}"
 
   vsphere_datacenter      = "${var.vsphere_datacenter}"
-  vsphere_datastore       = "${var.vsphere_datastore}"
+  vsphere_datastore       = "${var.manager_vsphere_datastore}"
   vsphere_cluster         = "${var.manager_vsphere_cluster}"
   vsphere_network         = "${var.manager_vsphere_network}"
   vsphere_folder          = "${var.vsphere_folder}"
@@ -48,7 +48,7 @@ module "docker-worker-a" {
   environment             = "${var.environment}-${var.worker_a_label}"
 
   vsphere_datacenter      = "${var.vsphere_datacenter}"
-  vsphere_datastore       = "${var.vsphere_datastore}"
+  vsphere_datastore       = "${var.worker_a_vsphere_datastore}"
   vsphere_cluster         = "${var.worker_a_vsphere_cluster}"
   vsphere_network         = "${var.worker_a_vsphere_network}"
   vsphere_folder          = "${var.vsphere_folder}"
@@ -78,7 +78,7 @@ module "docker-worker-b" {
   environment             = "${var.environment}-${var.worker_b_label}"
 
   vsphere_datacenter      = "${var.vsphere_datacenter}"
-  vsphere_datastore       = "${var.vsphere_datastore}"
+  vsphere_datastore       = "${var.worker_b_vsphere_datastore}"
   vsphere_cluster         = "${var.worker_b_vsphere_cluster}"
   vsphere_network         = "${var.worker_b_vsphere_network}"
   vsphere_folder          = "${var.vsphere_folder}"
@@ -110,7 +110,7 @@ module "docker-dtr" {
   environment             = "${var.environment}"
 
   vsphere_datacenter      = "${var.vsphere_datacenter}"
-  vsphere_datastore       = "${var.vsphere_datastore}"
+  vsphere_datastore       = "${var.manager_vsphere_datastore}"
   vsphere_cluster         = "${var.manager_vsphere_cluster}"
   vsphere_network         = "${var.manager_vsphere_network}"
   vsphere_folder          = "${var.vsphere_folder}"
