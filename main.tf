@@ -18,7 +18,7 @@ module "docker-manager" {
 
   vsphere_datacenter      = "${var.vsphere_datacenter}"
   vsphere_datastore       = "${var.vsphere_datastore}"
-  vsphere_cluster         = "${var.vsphere_cluster}"
+  vsphere_cluster         = "${var.manager_vsphere_cluster}"
   vsphere_network         = "${var.manager_vsphere_network}"
   vsphere_folder          = "${var.vsphere_folder}"
 
@@ -49,7 +49,7 @@ module "docker-worker-a" {
 
   vsphere_datacenter      = "${var.vsphere_datacenter}"
   vsphere_datastore       = "${var.vsphere_datastore}"
-  vsphere_cluster         = "${var.vsphere_cluster}"
+  vsphere_cluster         = "${var.worker_a_vsphere_cluster}"
   vsphere_network         = "${var.worker_a_vsphere_network}"
   vsphere_folder          = "${var.vsphere_folder}"
 
@@ -79,7 +79,7 @@ module "docker-worker-b" {
 
   vsphere_datacenter      = "${var.vsphere_datacenter}"
   vsphere_datastore       = "${var.vsphere_datastore}"
-  vsphere_cluster         = "${var.vsphere_cluster}"
+  vsphere_cluster         = "${var.worker_b_vsphere_cluster}"
   vsphere_network         = "${var.worker_b_vsphere_network}"
   vsphere_folder          = "${var.vsphere_folder}"
 
@@ -111,7 +111,7 @@ module "docker-dtr" {
 
   vsphere_datacenter      = "${var.vsphere_datacenter}"
   vsphere_datastore       = "${var.vsphere_datastore}"
-  vsphere_cluster         = "${var.vsphere_cluster}"
+  vsphere_cluster         = "${var.manager_vsphere_cluster}"
   vsphere_network         = "${var.manager_vsphere_network}"
   vsphere_folder          = "${var.vsphere_folder}"
 
@@ -207,4 +207,5 @@ module "dtr-init" {
   dtr_url            = "https://${module.docker-dtr.node_ips[0]}"
   manager_ip         = "${module.docker-manager.node_ips[0]}"
   script_path        = "${var.script_path}"
+  dtr_nfs_url        = "${var.dtr_nfs_url}"
 }

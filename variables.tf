@@ -18,26 +18,33 @@ variable "vsphere_datastore" {
   description = "vsphere datastore"
 }
 
-variable "vsphere_cluster" {
-  description = "vSphere compute cluster to use"
+variable "manager_vsphere_cluster" {
+  description = "vSphere compute cluster to use for manager and DTR nodes"
 }
 
 variable "manager_vsphere_network" {
   description = "vSphere network to which to connect manager and dtr vms"
 }
 
-variable "worker_a_vsphere_network" {
-  description = "vSphere network to which to connect vms for worker group A"
+variable "worker_a_vsphere_cluster" {
+  description = "vSphere compute cluster to use for worker group A"
 }
 
-variable "worker_b_vsphere_network" {
-  description = "vSphere network to which to connect vms for worker group B"
-  default = ""
+variable "worker_a_vsphere_network" {
+  description = "vSphere network to which to connect vms for worker group A"
 }
 
 variable "worker_a_label" {
   description = "Label to apply to nodes in worker group 1"
   default = "a"
+}
+variable "worker_b_vsphere_cluster" {
+  description = "vSphere compute cluster to use for worker group A"
+}
+
+variable "worker_b_vsphere_network" {
+  description = "vSphere network to which to connect vms for worker group B"
+  default = ""
 }
 
 variable "worker_b_label" {
@@ -146,14 +153,9 @@ variable "ssh_password" {
   description = "password for the account given in ssh_username"
 }
 
-variable "dtr_storage_host" {
-  description = "Host with NFS share for DTR storage (omit to use local storage)"
+variable "dtr_nfs_url" {
+  description = "URL of a nfs share to use for DTR storage"
   default = ""
-}
-
-variable "dtr_storage_path" {
-  description = "Path to NFS share on storage host"
-  default = "/data/dtr"
 }
 
 variable "ucp_version" {
