@@ -6,11 +6,6 @@ variable "node_type" {
   description = "Short code indicating the role of this node."
 }
 
-variable "start_id" {
-  description = "ID to use for first node in this series"
-  default = "0"
-}
-
 variable "primary_manager_ip" {
   description = "The IP address of the primary manager"
   default = ""
