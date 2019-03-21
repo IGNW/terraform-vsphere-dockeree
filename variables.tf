@@ -26,6 +26,10 @@ variable "manager_vsphere_network" {
   description = "vSphere network to which to connect manager and dtr vms"
 }
 
+variable "manager_vm_template" {
+  description = "VM template to use for manager nodes"
+}
+
 variable "worker_a_label" {
   description = "Label to apply to nodes in worker group 1"
   default = "a"
@@ -41,6 +45,10 @@ variable "worker_a_vsphere_cluster" {
 
 variable "worker_a_vsphere_network" {
   description = "vSphere network to which to connect vms for worker group A"
+}
+
+variable "worker_a_vm_template" {
+  description = "VM template to use for vms in worker group A"
 }
 
 variable "worker_b_label" {
@@ -59,6 +67,10 @@ variable "worker_b_vsphere_cluster" {
 variable "worker_b_vsphere_network" {
   description = "vSphere network to which to connect vms for worker group B"
   default = ""
+}
+
+variable "worker_b_vm_template" {
+  description = "VM template to use for vms in worker group B"
 }
 
 variable "domain" {
@@ -148,10 +160,6 @@ variable "ucp_admin_username" {
 variable "ucp_admin_password" {
   description = "Password for the UCP administrator, used for the GUI login"
   default = "ucpw123!"
-}
-
-variable "vm_template" {
-  description = "VM template to use"
 }
 
 variable "ssh_username" {
