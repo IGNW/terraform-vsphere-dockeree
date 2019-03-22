@@ -151,9 +151,11 @@ module "manager-init" {
   ucp_url            = "https://${module.docker-manager.node_ips[0]}"
   ucp_version        = "${var.ucp_version}"
   consul_secret      = "${random_id.consul_secret.b64_std}"
+  dockeree_license   = "${var.dockeree_license}"
   dtr_url            = "https://${module.docker-dtr.node_ips[0]}"
   manager_ip         = "${module.docker-manager.node_ips[0]}"
   script_path        = "${var.script_path}"
+  run_init           = "${var.run_init}"
 }
 
 module "worker-a-init" {

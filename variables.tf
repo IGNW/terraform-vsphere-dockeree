@@ -213,3 +213,8 @@ variable "run_init" {
   description = "Set to 0 to skip running init scripts"
   default = "1"
 }
+
+variable "dockeree_license" {
+  description = "Docker EE lilcense text (JSON)"
+  default = ""
+}
