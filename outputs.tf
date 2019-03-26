@@ -13,11 +13,3 @@ output "manager_ips" {
 output "dtr_ips" {
   value = "${module.docker-dtr.node_ips}"
 }
-
-output "worker_a_ips" {
-  value = "${module.docker-worker-a.node_ips}"
-}
-
-output "worker_b_ips" {
-  value = "${module.docker-worker-b.node_ips}"
-}
