@@ -2,9 +2,9 @@ data "template_file" "dtr-nginx-conf" {
   template = "${file("${path.module}/dtr-nginx.conf.tpl")}"
 
   vars {
-    dtr_ip0 = "${var.dtr_ip0}"
-    dtr_ip1 = "${var.dtr_ip1}"
-    dtr_ip2 = "${var.dtr_ip2}"
+    dtr_ip0 = "${var.dtr_ips[0]}"
+    dtr_ip1 = "${var.dtr_ips[1]}"
+    dtr_ip2 = "${var.dtr_ips[2]}"
   }
 }
 
@@ -12,9 +12,9 @@ data "template_file" "ucp-nginx-conf" {
   template = "${file("${path.module}/ucp-nginx.conf.tpl")}"
 
   vars {
-    ucp_ip0 = "${var.ucp_ip0}"
-    ucp_ip1 = "${var.ucp_ip1}"
-    ucp_ip2 = "${var.ucp_ip2}"
+    ucp_ip0 = "${var.ucp_ips[0]}"
+    ucp_ip1 = "${var.ucp_ips[1]}"
+    ucp_ip2 = "${var.ucp_ips[2]}"
   }
 }
 

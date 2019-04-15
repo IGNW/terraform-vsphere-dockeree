@@ -220,7 +220,7 @@ module "nginx-update" {
 
   lb_count     = "${var.load_balancer_count}"
   lb_ips       = "${var.load_balancer_ips}"
-  ssh_username = "${var.load_balancer_useraname}"
+  ssh_username = "${var.load_balancer_username}"
   ssh_password = "${var.load_balancer_password}"
   ucp_ips      = "${module.docker-manager.node_ips}"
   dtr_ips      = "${module.docker-dtr.node_ips}"
