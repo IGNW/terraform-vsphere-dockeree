@@ -22,6 +22,7 @@ variable "dtr_ips" {
 }
 
 variable "ucp_ips" {
+  type = "list"
   description = "IP addresses of UCP nodes"
 }
 

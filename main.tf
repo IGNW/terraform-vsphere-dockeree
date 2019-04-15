@@ -217,6 +217,7 @@ module "dtr-init" {
 
 module "nginx-update" {
   source       = "modules/nginx-updater"
+  # depends_on   = ["ucp_init", "dtr_init"]
 
   lb_count     = "${var.load_balancer_count}"
   lb_ips       = "${var.load_balancer_ips}"
