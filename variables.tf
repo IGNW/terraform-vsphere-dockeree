@@ -242,5 +242,5 @@ variable "load_balancer_password" {
 
 variable "load_balancer_script_path" {
   description = "Path to upload scripts and files on the load balancers"
-  default = "/opt/terraform"
+  default = "/tmp"
 }

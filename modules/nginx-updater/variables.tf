@@ -24,3 +24,8 @@ variable "dtr_ips" {
 variable "ucp_ips" {
   description = "IP addresses of UCP nodes"
 }
+
+variable "script_path" {
+  description = "Path on load balancers to which scripts and templated files should be uploaded"
+  default = "/tmp"
+}
