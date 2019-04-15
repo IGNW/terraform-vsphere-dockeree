@@ -214,3 +214,16 @@ module "dtr-init" {
   dtr_nfs_url        = "${var.dtr_nfs_url}"
   run_init           = "${var.run_init}"
 }
+
+module "nginx-update" {
+  source       = "modules/nginx-updater"
+
+  lb_count     = "${var.load_balancer_count}"
+  lb_ips       = "${var.load_balancer_ips}"
+  ssh_username = "${var.load_balancer_useraname}"
+  ssh_password = "${var.load_balancer_password}"
+  ucp_ips      = "${module.docker-manager.node_ips}"
+  dtr_ips      = "${module.docker-dtr.node_ips}"
+  script_path   = "${var.load_balancer_script_path}"
+
+}
