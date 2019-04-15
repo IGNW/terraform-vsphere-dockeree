@@ -218,3 +218,29 @@ variable "dockeree_license" {
   description = "Docker EE lilcense text (JSON)"
   default = ""
 }
+
+variable "load_balancer_count" {
+  default = "0"
+  description = "Number of load balancers"
+}
+
+variable "load_balancer_ips" {
+  type = "list"
+  description = "List of load balancer IPs"
+  default = ["0.0.0.0"]
+}
+
+variable "load_balancer_username" {
+  description = "Username to use when connecting to load balancer hosts"
+  default = ""
+}
+
+variable "load_balancer_password" {
+  description = "Password to use when connecting to load balancer hosts"
+  default = ""
+}
+
+variable "load_balancer_script_path" {
+  description = "Path to upload scripts and files on the load balancers"
+  default = "/tmp"
+}
