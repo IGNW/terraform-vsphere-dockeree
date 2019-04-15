@@ -44,7 +44,7 @@ resource "null_resource" "nginx-conf-upload"
 
   provisioner "file" {
     content     = "${data.template_file.ucp-nginx-conf.rendered}"
-    destination = "${var.script_path}/dtr-nginx.conf"
+    destination = "${var.script_path}/ucp-nginx.conf"
   }
 
   provisioner "file" {
