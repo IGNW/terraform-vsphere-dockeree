@@ -137,7 +137,7 @@ module "docker-dtr" {
 # Run the scripts to initialize the Docker EE cluster
 
 module "manager-init" {
-  source = "github.com/IGNW/terraform-ssh-dockeree-init?ref=1.0.0"
+  source = "github.com/IGNW/terraform-ssh-dockeree-init?ref=2.1.0"
 
   node_count         = "${var.manager_node_count}"
   public_ips         = "${module.docker-manager.node_ips}"
@@ -148,18 +148,22 @@ module "manager-init" {
   ssh_password       = "${var.ssh_password}"
   ucp_admin_username = "${var.ucp_admin_username}"
   ucp_admin_password = "${var.ucp_admin_password}"
-  ucp_url            = "https://${module.docker-manager.node_ips[0]}"
+  ucp_fqdn           = "${var.ucp_fqdn}"
   ucp_version        = "${var.ucp_version}"
   consul_secret      = "${random_id.consul_secret.b64_std}"
   dockeree_license   = "${var.dockeree_license}"
-  dtr_url            = "https://${module.docker-dtr.node_ips[0]}"
-  manager_ip         = "${module.docker-manager.node_ips[0]}"
+  dtr_fqdn           = "${var.dtr_fqdn}"
+  consul_server      = "${module.docker-manager.node_ips[0]}"
   script_path        = "${var.script_path}"
   run_init           = "${var.run_init}"
+  use_custom_ssl     = "${var.use_custom_ssl}"
+  ssl_ca_file        = "${var.ssl_ca_file}"
+  ssl_cert_file      = "${var.ssl_cert_file}"
+  ssl_key_file       = "${var.ssl_key_file}"
 }
 
 module "worker-a-init" {
-  source = "github.com/IGNW/terraform-ssh-dockeree-init?ref=2.0.0"
+  source = "github.com/IGNW/terraform-ssh-dockeree-init?ref=2.1.0"
 
   node_count         = "${var.worker_a_node_count}"
   public_ips         = "${module.docker-worker-a.node_ips}"
@@ -168,16 +172,19 @@ module "worker-a-init" {
   node_type          = "wrk"
   ssh_username       = "${var.ssh_username}"
   ssh_password       = "${var.ssh_password}"
-  ucp_url            = "https://${module.docker-manager.node_ips[0]}"
+  ucp_fqdn           = "${var.ucp_fqdn}"
   consul_secret      = "${random_id.consul_secret.b64_std}"
-  dtr_url            = "https://${module.docker-dtr.node_ips[0]}"
-  manager_ip         = "${module.docker-manager.node_ips[0]}"
+  dtr_fqdn           = "${var.dtr_fqdn}"
+  consul_server      = "${module.docker-manager.node_ips[0]}"
   script_path        = "${var.script_path}"
   run_init           = "${var.run_init}"
+  ssl_ca_file        = "${var.ssl_ca_file}"
+  ssl_cert_file      = "${var.ssl_cert_file}"
+  ssl_key_file       = "${var.ssl_key_file}"
 }
 
 module "worker-b-init" {
-  source = "github.com/IGNW/terraform-ssh-dockeree-init?ref=2.0.0"
+  source = "github.com/IGNW/terraform-ssh-dockeree-init?ref=2.1.0"
 
   node_count         = "${var.worker_b_node_count}"
   public_ips         = "${module.docker-worker-b.node_ips}"
@@ -186,33 +193,40 @@ module "worker-b-init" {
   node_type          = "wrk"
   ssh_username       = "${var.ssh_username}"
   ssh_password       = "${var.ssh_password}"
-  ucp_url            = "https://${module.docker-manager.node_ips[0]}"
+  ucp_fqdn           = "${var.ucp_fqdn}"
   consul_secret      = "${random_id.consul_secret.b64_std}"
-  dtr_url            = "https://${module.docker-dtr.node_ips[0]}"
-  manager_ip         = "${module.docker-manager.node_ips[0]}"
+  dtr_fqdn           = "${var.dtr_fqdn}"
+  consul_server      = "${module.docker-manager.node_ips[0]}"
   script_path        = "${var.script_path}"
   run_init           = "${var.run_init}"
+  ssl_ca_file        = "${var.ssl_ca_file}"
+  ssl_cert_file      = "${var.ssl_cert_file}"
+  ssl_key_file       = "${var.ssl_key_file}"
 }
 
 module "dtr-init" {
-  source = "github.com/IGNW/terraform-ssh-dockeree-init?ref=2.0.0"
+  source = "github.com/IGNW/terraform-ssh-dockeree-init?ref=2.1.0"
 
   node_count         = "${var.dtr_node_count}"
   public_ips         = "${module.docker-dtr.node_ips}"
-  private_ips         = "${module.docker-dtr.node_ips}"
+  private_ips        = "${module.docker-dtr.node_ips}"
   resource_ids       = "${module.docker-dtr.resource_ids}"
   node_type          = "dtr"
   ssh_username       = "${var.ssh_username}"
   ssh_password       = "${var.ssh_password}"
-  ucp_url            = "https://${module.docker-manager.node_ips[0]}"
+  ucp_fqdn           = "${var.ucp_fqdn}"
   ucp_admin_username = "${var.ucp_admin_username}"
   ucp_admin_password = "${var.ucp_admin_password}"
   consul_secret      = "${random_id.consul_secret.b64_std}"
-  dtr_url            = "https://${module.docker-dtr.node_ips[0]}"
-  manager_ip         = "${module.docker-manager.node_ips[0]}"
+  dtr_fqdn           = "${var.dtr_fqdn}"
+  consul_server      = "${module.docker-manager.node_ips[0]}"
   script_path        = "${var.script_path}"
   dtr_nfs_url        = "${var.dtr_nfs_url}"
   run_init           = "${var.run_init}"
+  use_custom_ssl     = "${var.use_custom_ssl}"
+  ssl_ca_file        = "${var.ssl_ca_file}"
+  ssl_cert_file      = "${var.ssl_cert_file}"
+  ssl_key_file       = "${var.ssl_key_file}"
 }
 
 module "nginx-update" {

@@ -244,3 +244,28 @@ variable "load_balancer_script_path" {
   description = "Path to upload scripts and files on the load balancers"
   default = "/tmp"
 }
+
+variable "ucp_fqdn" {
+  description = "FQDN of the UCP load balancer"
+}
+
+variable "dtr_fqdn" {
+  description = "FQND of the DTR load balancer"
+}
+
+variable "use_custom_ssl" {
+  description = "Set to 1 to use custom ssl certs"
+  default = "0"
+}
+
+variable "ssl_ca_file" {
+  description = "CA Cert"
+}
+
+variable "ssl_cert_file" {
+  description = "SSL Cert"
+}
+
+variable "ssl_key_file" {
+  description = "SSL Key"
+}
