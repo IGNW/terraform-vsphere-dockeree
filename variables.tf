@@ -244,3 +244,11 @@ variable "load_balancer_script_path" {
   description = "Path to upload scripts and files on the load balancers"
   default = "/tmp"
 }
+
+variable "ucp_fqdn" {
+  description = "FQDN of the UCP load balancer"
+}
+
+variable "dtr_fqdn" {
+  description = "FQND of the DTR load balancer"
+}
