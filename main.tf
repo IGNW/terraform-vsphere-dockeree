@@ -137,7 +137,7 @@ module "docker-dtr" {
 # Run the scripts to initialize the Docker EE cluster
 
 module "manager-init" {
-  source = "github.com/IGNW/terraform-ssh-dockeree-init?ref=2.1.0"
+  source = "github.com/IGNW/terraform-ssh-dockeree-init?ref=2.1.1"
 
   node_count         = "${var.manager_node_count}"
   public_ips         = "${module.docker-manager.node_ips}"
@@ -163,7 +163,7 @@ module "manager-init" {
 }
 
 module "worker-a-init" {
-  source = "github.com/IGNW/terraform-ssh-dockeree-init?ref=2.1.0"
+  source = "github.com/IGNW/terraform-ssh-dockeree-init?ref=2.1.1"
 
   node_count         = "${var.worker_a_node_count}"
   public_ips         = "${module.docker-worker-a.node_ips}"
@@ -184,7 +184,7 @@ module "worker-a-init" {
 }
 
 module "worker-b-init" {
-  source = "github.com/IGNW/terraform-ssh-dockeree-init?ref=2.1.0"
+  source = "github.com/IGNW/terraform-ssh-dockeree-init?ref=2.1.1"
 
   node_count         = "${var.worker_b_node_count}"
   public_ips         = "${module.docker-worker-b.node_ips}"
@@ -205,7 +205,7 @@ module "worker-b-init" {
 }
 
 module "dtr-init" {
-  source = "github.com/IGNW/terraform-ssh-dockeree-init?ref=2.1.0"
+  source = "github.com/IGNW/terraform-ssh-dockeree-init?ref=2.1.1"
 
   node_count         = "${var.dtr_node_count}"
   public_ips         = "${module.docker-dtr.node_ips}"
@@ -231,7 +231,6 @@ module "dtr-init" {
 
 module "nginx-update" {
   source       = "modules/nginx-updater"
-  # depends_on   = ["ucp_init", "dtr_init"]
 
   lb_count     = "${var.load_balancer_count}"
   lb_ips       = "${var.load_balancer_ips}"
@@ -240,5 +239,4 @@ module "nginx-update" {
   ucp_ips      = "${module.docker-manager.node_ips}"
   dtr_ips      = "${module.docker-dtr.node_ips}"
   script_path   = "${var.load_balancer_script_path}"
-
 }
