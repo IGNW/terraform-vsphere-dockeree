@@ -153,7 +153,7 @@ module "manager-init" {
   consul_secret      = "${random_id.consul_secret.b64_std}"
   dockeree_license   = "${var.dockeree_license}"
   dtr_fqdn           = "${var.dtr_fqdn}"
-  manager_ip         = "${module.docker-manager.node_ips[0]}"
+  consul_server      = "${module.docker-manager.node_ips[0]}"
   script_path        = "${var.script_path}"
   run_init           = "${var.run_init}"
 }
