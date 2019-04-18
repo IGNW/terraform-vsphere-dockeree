@@ -157,6 +157,9 @@ module "manager-init" {
   script_path        = "${var.script_path}"
   run_init           = "${var.run_init}"
   use_custom_ssl     = "${var.use_custom_ssl}"
+  ssl_ca_file        = "${var.ssl_ca_file}"
+  ssl_cert_file      = "${var.ssl_cert_file}"
+  ssl_key_file       = "${var.ssl_key_file}"
 }
 
 module "worker-a-init" {
@@ -175,6 +178,9 @@ module "worker-a-init" {
   consul_server      = "${module.docker-manager.node_ips[0]}"
   script_path        = "${var.script_path}"
   run_init           = "${var.run_init}"
+  ssl_ca_file        = "${var.ssl_ca_file}"
+  ssl_cert_file      = "${var.ssl_cert_file}"
+  ssl_key_file       = "${var.ssl_key_file}"
 }
 
 module "worker-b-init" {
@@ -193,6 +199,9 @@ module "worker-b-init" {
   consul_server      = "${module.docker-manager.node_ips[0]}"
   script_path        = "${var.script_path}"
   run_init           = "${var.run_init}"
+  ssl_ca_file        = "${var.ssl_ca_file}"
+  ssl_cert_file      = "${var.ssl_cert_file}"
+  ssl_key_file       = "${var.ssl_key_file}"
 }
 
 module "dtr-init" {
@@ -215,6 +224,9 @@ module "dtr-init" {
   dtr_nfs_url        = "${var.dtr_nfs_url}"
   run_init           = "${var.run_init}"
   use_custom_ssl     = "${var.use_custom_ssl}"
+  ssl_ca_file        = "${var.ssl_ca_file}"
+  ssl_cert_file      = "${var.ssl_cert_file}"
+  ssl_key_file       = "${var.ssl_key_file}"
 }
 
 module "nginx-update" {
