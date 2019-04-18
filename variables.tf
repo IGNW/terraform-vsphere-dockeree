@@ -257,3 +257,18 @@ variable "use_custom_ssl" {
   description = "Set to 1 to use custom ssl certs"
   default = "0"
 }
+
+variable "ssl_ca_file" {
+  description = "CA Cert"
+  default=""
+}
+
+variable "ssl_cert_file" {
+  description = "SSL Cert"
+  default=""
+}
+
+variable "ssl_key_file" {
+  description = "SSL Key"
+  default=""
+}
