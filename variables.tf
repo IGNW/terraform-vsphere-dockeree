@@ -252,3 +252,8 @@ variable "ucp_fqdn" {
 variable "dtr_fqdn" {
   description = "FQND of the DTR load balancer"
 }
+
+variable "use_custom_ssl" {
+  description = "Set to 1 to use custom ssl certs"
+  default = "0"
+}

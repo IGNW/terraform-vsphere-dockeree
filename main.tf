@@ -156,6 +156,7 @@ module "manager-init" {
   consul_server      = "${module.docker-manager.node_ips[0]}"
   script_path        = "${var.script_path}"
   run_init           = "${var.run_init}"
+  use_custom_ssl     = "${var.use_custom_ssl}"
 }
 
 module "worker-a-init" {
@@ -213,6 +214,7 @@ module "dtr-init" {
   script_path        = "${var.script_path}"
   dtr_nfs_url        = "${var.dtr_nfs_url}"
   run_init           = "${var.run_init}"
+  use_custom_ssl     = "${var.use_custom_ssl}"
 }
 
 module "nginx-update" {
