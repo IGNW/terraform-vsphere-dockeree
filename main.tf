@@ -32,8 +32,6 @@ module "docker-manager" {
   thin_provisioned        = "${var.thin_provisioned}"
   eagerly_scrub           = "${var.eagerly_scrub}"
   scsi_type               = "${var.scsi_type}"
-  ucp_admin_username      = "${var.ucp_admin_username}"
-  ucp_admin_password      = "${var.ucp_admin_password}"
   node_count              = "${var.manager_node_count}"
 }
 
@@ -59,8 +57,6 @@ module "docker-worker-a" {
   thin_provisioned        = "${var.thin_provisioned}"
   eagerly_scrub           = "${var.eagerly_scrub}"
   scsi_type               = "${var.scsi_type}"
-  ucp_admin_username      = "${var.ucp_admin_username}"
-  ucp_admin_password      = "${var.ucp_admin_password}"
   node_count              = "${var.worker_a_node_count}"
 }
 
@@ -86,8 +82,6 @@ module "docker-worker-b" {
   thin_provisioned         = "${var.thin_provisioned}"
   eagerly_scrub           = "${var.eagerly_scrub}"
   scsi_type               = "${var.scsi_type}"
-  ucp_admin_username      = "${var.ucp_admin_username}"
-  ucp_admin_password      = "${var.ucp_admin_password}"
   node_count              = "${var.worker_b_node_count}"
 }
 
@@ -115,8 +109,6 @@ module "docker-dtr" {
   thin_provisioned        = "${var.thin_provisioned}"
   eagerly_scrub           = "${var.eagerly_scrub}"
   scsi_type               = "${var.scsi_type}"
-  ucp_admin_username      = "${var.ucp_admin_username}"
-  ucp_admin_password      = "${var.ucp_admin_password}"
   node_count              = "${var.dtr_node_count}"
 }
 
