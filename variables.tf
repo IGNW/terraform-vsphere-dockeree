@@ -187,7 +187,7 @@ variable "dtr_version" {
 
 variable "consul_version" {
   description = "Version of Consul to install"
-  default = "NO_CONSUL_VERSION_SPECIFIED_GOT_THIS_FROM_VALUE_FROM_TF-VSPHERE-DOCKEREE"
+  default = "1.4.4"
 }
 
 variable "thin_provisioned" {

@@ -34,11 +34,7 @@ module "docker-manager" {
   scsi_type               = "${var.scsi_type}"
   ucp_admin_username      = "${var.ucp_admin_username}"
   ucp_admin_password      = "${var.ucp_admin_password}"
-
   node_count              = "${var.manager_node_count}"
-  ucp_version             = "${var.ucp_version}"
-  consul_version          = "${var.consul_version}"
-  script_path             = "${var.script_path}"
 }
 
 module "docker-worker-a" {
@@ -65,10 +61,7 @@ module "docker-worker-a" {
   scsi_type               = "${var.scsi_type}"
   ucp_admin_username      = "${var.ucp_admin_username}"
   ucp_admin_password      = "${var.ucp_admin_password}"
-
   node_count              = "${var.worker_a_node_count}"
-  consul_version          = "${var.consul_version}"
-  script_path             = "${var.script_path}"
 }
 
 module "docker-worker-b" {
@@ -95,10 +88,7 @@ module "docker-worker-b" {
   scsi_type               = "${var.scsi_type}"
   ucp_admin_username      = "${var.ucp_admin_username}"
   ucp_admin_password      = "${var.ucp_admin_password}"
-
   node_count              = "${var.worker_b_node_count}"
-  consul_version          = "${var.consul_version}"
-  script_path             = "${var.script_path}"
 }
 
 
@@ -127,11 +117,7 @@ module "docker-dtr" {
   scsi_type               = "${var.scsi_type}"
   ucp_admin_username      = "${var.ucp_admin_username}"
   ucp_admin_password      = "${var.ucp_admin_password}"
-
   node_count              = "${var.dtr_node_count}"
-  dtr_version             = "${var.dtr_version}"
-  consul_version          = "${var.consul_version}"
-  script_path             = "${var.script_path}"
 }
 
 # Run the scripts to initialize the Docker EE cluster
@@ -150,6 +136,7 @@ module "manager-init" {
   ucp_admin_password = "${var.ucp_admin_password}"
   ucp_fqdn           = "${var.ucp_fqdn}"
   ucp_version        = "${var.ucp_version}"
+  consul_version     = "${var.consul_version}"
   consul_secret      = "${random_id.consul_secret.b64_std}"
   dockeree_license   = "${var.dockeree_license}"
   dtr_fqdn           = "${var.dtr_fqdn}"
@@ -176,6 +163,7 @@ module "worker-a-init" {
   consul_secret      = "${random_id.consul_secret.b64_std}"
   dtr_fqdn           = "${var.dtr_fqdn}"
   consul_server      = "${module.docker-manager.node_ips[0]}"
+  consul_version     = "${var.consul_version}"
   script_path        = "${var.script_path}"
   run_init           = "${var.run_init}"
   ssl_ca_file        = "${var.ssl_ca_file}"
@@ -197,6 +185,7 @@ module "worker-b-init" {
   consul_secret      = "${random_id.consul_secret.b64_std}"
   dtr_fqdn           = "${var.dtr_fqdn}"
   consul_server      = "${module.docker-manager.node_ips[0]}"
+  consul_version          = "${var.consul_version}"
   script_path        = "${var.script_path}"
   run_init           = "${var.run_init}"
   ssl_ca_file        = "${var.ssl_ca_file}"
@@ -220,6 +209,8 @@ module "dtr-init" {
   consul_secret      = "${random_id.consul_secret.b64_std}"
   dtr_fqdn           = "${var.dtr_fqdn}"
   consul_server      = "${module.docker-manager.node_ips[0]}"
+  consul_version     = "${var.consul_version}"
+  dtr_version        = "${var.dtr_version}"
   script_path        = "${var.script_path}"
   dtr_nfs_url        = "${var.dtr_nfs_url}"
   run_init           = "${var.run_init}"

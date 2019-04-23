@@ -6,11 +6,6 @@ variable "node_type" {
   description = "Short code indicating the role of this node."
 }
 
-variable "primary_manager_ip" {
-  description = "The IP address of the primary manager"
-  default = ""
-}
-
 variable "ssh_username" {
   description = "Username with passwordless sudo privileges on disk image"
 }
@@ -63,28 +58,6 @@ variable "vsphere_datacenter" {
   description = ""
 }
 
-variable "ucp_admin_username" {
-  description = "Username for the UCP administrator account."
-}
-
-variable "ucp_admin_password" {
-  description = "Password for the UCP administrator account."
-}
-
-variable "ucp_version" {
-  description = "Version of the UCP to install"
-  default = ""
-}
-
-variable "dtr_version" {
-  description = "Version of the DTR to install"
-  default = ""
-}
-
-variable "consul_version" {
-  description = "Version of Consul to install"
-}
-
 variable "thin_provisioned" {
   description = "Was the template created using thin provisioning (true/false)"
 }
@@ -95,9 +68,4 @@ variable "eagerly_scrub" {
 
 variable "scsi_type" {
   default = "pvscsi"
-}
-
-variable "script_path" {
-  description = "Location on VM to upload scripts for inline execution"
-  default = "/tmp"
 }
