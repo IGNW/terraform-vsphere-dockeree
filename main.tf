@@ -177,7 +177,7 @@ module "worker-b-init" {
   consul_secret      = "${random_id.consul_secret.b64_std}"
   dtr_fqdn           = "${var.dtr_fqdn}"
   consul_server      = "${module.docker-manager.node_ips[0]}"
-  consul_version          = "${var.consul_version}"
+  consul_version     = "${var.consul_version}"
   script_path        = "${var.script_path}"
   run_init           = "${var.run_init}"
   ssl_ca_file        = "${var.ssl_ca_file}"
