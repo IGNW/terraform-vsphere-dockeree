@@ -177,17 +177,14 @@ variable "dtr_nfs_url" {
 
 variable "ucp_version" {
   description = "Version of the UCP to install"
-  default = "3.1.3"
 }
 
 variable "dtr_version" {
   description = "Version of the DTR to install"
-  default = "2.6.2"
 }
 
 variable "consul_version" {
   description = "Version of Consul to install"
-  default = "1.4.4"
 }
 
 variable "thin_provisioned" {
