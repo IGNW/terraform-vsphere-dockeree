@@ -221,5 +221,6 @@ module "nginx-update" {
   ssh_password = "${var.load_balancer_password}"
   ucp_ips      = "${module.docker-manager.node_ips}"
   dtr_ips      = "${module.docker-dtr.node_ips}"
+  worker_ips   = "${module.docker-worker.node_ips}"
   script_path   = "${var.load_balancer_script_path}"
 }

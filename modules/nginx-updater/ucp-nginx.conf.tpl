@@ -19,12 +19,28 @@ stream {
         server ${ucp_ip1}:6443 max_fails=2 fail_timeout=30s;
         server ${ucp_ip2}:6443 max_fails=2 fail_timeout=30s;
     }
+    upstream ucp_8080 {
+        server ${interlock_ip1}:8080 max_fails=2 fail_timeout=30s;
+        server ${interlock_ip2}:8080 max_fails=2 fail_timeout=30s;
+    }
+    upstream ucp_8443 {
+        server ${worker_ip0}:8443 max_fails=2 fail_timeout=30s;
+        server ${worker_ip1}:8443 max_fails=2 fail_timeout=30s;
+    }
     server {
         listen 443;
         proxy_pass ucp_443;
     }
-        server {
+    server {
         listen 6443;
         proxy_pass kubectl_6443;
-     }
+    }
+    server {
+        listen 8080;
+        proxy_pass ucp_8080;
+   }
+   server {
+        listen 8443;
+        proxy_pass ucp_8443;
+   }
 }

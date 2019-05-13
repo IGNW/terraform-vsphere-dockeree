@@ -15,6 +15,8 @@ data "template_file" "ucp-nginx-conf" {
     ucp_ip0 = "${var.ucp_ips[0]}"
     ucp_ip1 = "${var.ucp_ips[1]}"
     ucp_ip2 = "${var.ucp_ips[2]}"
+    worker_ip0 = "${var.worker_ip[0]}"
+    worker_ip1 = "${var.worker_ip[1]}"
   }
 }
 
