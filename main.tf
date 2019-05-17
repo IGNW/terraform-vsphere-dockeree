@@ -125,7 +125,7 @@ module "nginx-update" {
 # Run the scripts to initialize the Docker EE cluster
 
 module "manager-init" {
-  source = "github.com/IGNW/terraform-null-dockeree-init"
+  source = "git@github.com:IGNW/terraform-null-dockeree-init"
 
   node_count         = "${var.manager_node_count}"
   public_ips         = "${module.docker-manager.node_ips}"
