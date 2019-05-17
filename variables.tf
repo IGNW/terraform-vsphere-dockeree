@@ -269,3 +269,6 @@ variable "ssl_cert_file" {
 variable "ssl_key_file" {
   description = "SSL Key"
 }
+
+variable "verbose_output" {
+}

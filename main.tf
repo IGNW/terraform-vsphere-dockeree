@@ -35,6 +35,30 @@ module "docker-manager" {
   node_count              = "${var.manager_node_count}"
 }
 
+module "docker-dtr" {
+  source                  = "modules/dockeree-node"
+  node_type               = "dtr"
+  environment             = "${var.environment}"
+
+  vsphere_datacenter      = "${var.vsphere_datacenter}"
+  vsphere_datastore       = "${var.manager_vsphere_datastore}"
+  vsphere_cluster         = "${var.manager_vsphere_cluster}"
+  vsphere_network         = "${var.manager_vsphere_network}"
+  vsphere_folder          = "${var.vsphere_folder}"
+  vm_template             = "${var.manager_vm_template}"
+
+  ssh_username            = "${var.ssh_username}"
+  ssh_password            = "${var.ssh_password}"
+  domain                  = "${var.domain}"
+  node_vcpu               = "${var.dtr_vcpu}"
+  node_memory             = "${var.dtr_memory_mb}"
+  root_volume_size        = "${var.dtr_root_volume_size}"
+  thin_provisioned        = "${var.thin_provisioned}"
+  eagerly_scrub           = "${var.eagerly_scrub}"
+  scsi_type               = "${var.scsi_type}"
+  node_count              = "${var.dtr_node_count}"
+}
+
 module "docker-worker-a" {
   source                  = "modules/dockeree-node"
 
@@ -85,37 +109,23 @@ module "docker-worker-b" {
   node_count              = "${var.worker_b_node_count}"
 }
 
+module "nginx-update" {
+  source       = "modules/nginx-updater"
 
-
-# Docker Trusted Registry
-module "docker-dtr" {
-  source                  = "modules/dockeree-node"
-  node_type               = "dtr"
-  environment             = "${var.environment}"
-
-  vsphere_datacenter      = "${var.vsphere_datacenter}"
-  vsphere_datastore       = "${var.manager_vsphere_datastore}"
-  vsphere_cluster         = "${var.manager_vsphere_cluster}"
-  vsphere_network         = "${var.manager_vsphere_network}"
-  vsphere_folder          = "${var.vsphere_folder}"
-  vm_template             = "${var.manager_vm_template}"
-
-  ssh_username            = "${var.ssh_username}"
-  ssh_password            = "${var.ssh_password}"
-  domain                  = "${var.domain}"
-  node_vcpu               = "${var.dtr_vcpu}"
-  node_memory             = "${var.dtr_memory_mb}"
-  root_volume_size        = "${var.dtr_root_volume_size}"
-  thin_provisioned        = "${var.thin_provisioned}"
-  eagerly_scrub           = "${var.eagerly_scrub}"
-  scsi_type               = "${var.scsi_type}"
-  node_count              = "${var.dtr_node_count}"
+  lb_count     = "${var.load_balancer_count}"
+  lb_ips       = "${var.load_balancer_ips}"
+  ssh_username = "${var.load_balancer_username}"
+  ssh_password = "${var.load_balancer_password}"
+  ucp_ips      = "${module.docker-manager.node_ips}"
+  dtr_ips      = "${module.docker-dtr.node_ips}"
+  worker_ips   = ["${module.docker-worker-a.node_ips[0]}", "${module.docker-worker-b.node_ips[0]}"]
+  script_path   = "${var.load_balancer_script_path}"
 }
 
 # Run the scripts to initialize the Docker EE cluster
 
 module "manager-init" {
-  source = "git::ssh://git@bitbucket.trustvesta.com:7999/infra/terraform-null-dockeree-init.git?ref=2.2.3"
+  source = "git::ssh://git@bitbucket.trustvesta.com:7999/infra/terraform-null-dockeree-init.git?ref=2.2.4"
 
   node_count         = "${var.manager_node_count}"
   public_ips         = "${module.docker-manager.node_ips}"
@@ -139,10 +149,12 @@ module "manager-init" {
   ssl_ca_file        = "${var.ssl_ca_file}"
   ssl_cert_file      = "${var.ssl_cert_file}"
   ssl_key_file       = "${var.ssl_key_file}"
+  verbose_output     = "${var.verbose_output}"
 }
 
 module "worker-a-init" {
-  source = "git::ssh://git@bitbucket.trustvesta.com:7999/infra/terraform-null-dockeree-init.git?ref=2.2.3"
+  source = "git::ssh://git@bitbucket.trustvesta.com:7999/infra/terraform-null-dockeree-init.git?ref=2.2.4"
+  nginx_update_id    = "${module.nginx-update.id}"
 
   node_count         = "${var.worker_a_node_count}"
   public_ips         = "${module.docker-worker-a.node_ips}"
@@ -161,10 +173,12 @@ module "worker-a-init" {
   ssl_ca_file        = "${var.ssl_ca_file}"
   ssl_cert_file      = "${var.ssl_cert_file}"
   ssl_key_file       = "${var.ssl_key_file}"
+  verbose_output     = "${var.verbose_output}"
 }
 
 module "worker-b-init" {
-  source = "git::ssh://git@bitbucket.trustvesta.com:7999/infra/terraform-null-dockeree-init?ref=2.2.3"
+  source = "git::ssh://git@bitbucket.trustvesta.com:7999/infra/terraform-null-dockeree-init?ref=2.2.4"
+  nginx_update_id    = "${module.nginx-update.id}"
 
   node_count         = "${var.worker_b_node_count}"
   public_ips         = "${module.docker-worker-b.node_ips}"
@@ -183,10 +197,12 @@ module "worker-b-init" {
   ssl_ca_file        = "${var.ssl_ca_file}"
   ssl_cert_file      = "${var.ssl_cert_file}"
   ssl_key_file       = "${var.ssl_key_file}"
+  verbose_output     = "${var.verbose_output}"
 }
 
 module "dtr-init" {
-  source = "git::ssh://git@bitbucket.trustvesta.com:7999/infra/terraform-null-dockeree-init?ref=2.2.3"
+  source = "git::ssh://git@bitbucket.trustvesta.com:7999/infra/terraform-null-dockeree-init?ref=2.2.4"
+  nginx_update_id    = "${module.nginx-update.id}"
 
   node_count         = "${var.dtr_node_count}"
   public_ips         = "${module.docker-dtr.node_ips}"
@@ -210,17 +226,5 @@ module "dtr-init" {
   ssl_ca_file        = "${var.ssl_ca_file}"
   ssl_cert_file      = "${var.ssl_cert_file}"
   ssl_key_file       = "${var.ssl_key_file}"
-}
-
-module "nginx-update" {
-  source       = "modules/nginx-updater"
-
-  lb_count     = "${var.load_balancer_count}"
-  lb_ips       = "${var.load_balancer_ips}"
-  ssh_username = "${var.load_balancer_username}"
-  ssh_password = "${var.load_balancer_password}"
-  ucp_ips      = "${module.docker-manager.node_ips}"
-  dtr_ips      = "${module.docker-dtr.node_ips}"
-  worker_ips   = "${module.docker-worker.node_ips}"
-  script_path   = "${var.load_balancer_script_path}"
+  verbose_output     = "${var.verbose_output}"
 }

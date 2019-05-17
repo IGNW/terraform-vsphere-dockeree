@@ -20,8 +20,8 @@ stream {
         server ${ucp_ip2}:6443 max_fails=2 fail_timeout=30s;
     }
     upstream ucp_8080 {
-        server ${interlock_ip1}:8080 max_fails=2 fail_timeout=30s;
-        server ${interlock_ip2}:8080 max_fails=2 fail_timeout=30s;
+        server ${worker_ip0}:8080 max_fails=2 fail_timeout=30s;
+        server ${worker_ip1}:8080 max_fails=2 fail_timeout=30s;
     }
     upstream ucp_8443 {
         server ${worker_ip0}:8443 max_fails=2 fail_timeout=30s;
