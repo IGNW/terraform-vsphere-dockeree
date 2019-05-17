@@ -125,7 +125,7 @@ module "nginx-update" {
 # Run the scripts to initialize the Docker EE cluster
 
 module "manager-init" {
-  source = "git::ssh://git@bitbucket.trustvesta.com:7999/infra/terraform-null-dockeree-init.git?ref=2.2.4"
+  source = "github.com/IGNW/terraform-null-dockeree-init"
 
   node_count         = "${var.manager_node_count}"
   public_ips         = "${module.docker-manager.node_ips}"
@@ -153,7 +153,7 @@ module "manager-init" {
 }
 
 module "worker-a-init" {
-  source = "git::ssh://git@bitbucket.trustvesta.com:7999/infra/terraform-null-dockeree-init.git?ref=2.2.4"
+  source = "github.com/IGNW/terraform-null-dockeree-init"
   nginx_update_id    = "${module.nginx-update.id}"
 
   node_count         = "${var.worker_a_node_count}"
@@ -177,7 +177,7 @@ module "worker-a-init" {
 }
 
 module "worker-b-init" {
-  source = "git::ssh://git@bitbucket.trustvesta.com:7999/infra/terraform-null-dockeree-init?ref=2.2.4"
+  source = "github.com/IGNW/terraform-null-dockeree-init"
   nginx_update_id    = "${module.nginx-update.id}"
 
   node_count         = "${var.worker_b_node_count}"
@@ -201,7 +201,7 @@ module "worker-b-init" {
 }
 
 module "dtr-init" {
-  source = "git::ssh://git@bitbucket.trustvesta.com:7999/infra/terraform-null-dockeree-init?ref=2.2.4"
+  source = "github.com/IGNW/terraform-null-dockeree-init"
   nginx_update_id    = "${module.nginx-update.id}"
 
   node_count         = "${var.dtr_node_count}"
