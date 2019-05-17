@@ -153,7 +153,7 @@ module "manager-init" {
 }
 
 module "worker-a-init" {
-  source = "github.com/IGNW/terraform-null-dockeree-init"
+  source = "git@github.com:IGNW/terraform-null-dockeree-init"
   nginx_update_id    = "${module.nginx-update.id}"
 
   node_count         = "${var.worker_a_node_count}"
@@ -177,7 +177,7 @@ module "worker-a-init" {
 }
 
 module "worker-b-init" {
-  source = "github.com/IGNW/terraform-null-dockeree-init"
+  source = "git@github.com:IGNW/terraform-null-dockeree-init"
   nginx_update_id    = "${module.nginx-update.id}"
 
   node_count         = "${var.worker_b_node_count}"
@@ -201,7 +201,7 @@ module "worker-b-init" {
 }
 
 module "dtr-init" {
-  source = "github.com/IGNW/terraform-null-dockeree-init"
+  source = "git@github.com:IGNW/terraform-null-dockeree-init"
   nginx_update_id    = "${module.nginx-update.id}"
 
   node_count         = "${var.dtr_node_count}"
