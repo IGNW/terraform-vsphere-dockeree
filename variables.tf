@@ -94,7 +94,7 @@ variable "manager_vcpu" {
 
 variable "manager_memory_mb" {
   description = "Memory (in MB) for manager nodes"
-  default = 6000
+  default = 16000
 }
 
 variable "manager_node_count" {
@@ -114,7 +114,7 @@ variable "worker_vcpu" {
 
 variable "worker_memory_mb" {
   description = "Memory (in MB) for worker nodes"
-  default = 6000
+  default = 16000
 }
 
 variable "worker_a_node_count" {
@@ -144,7 +144,7 @@ variable "dtr_vcpu" {
 
 variable "dtr_memory_mb" {
   description = "Memory (in MB) for DTR nodes"
-  default = 6000
+  default = 16000
 }
 
 variable "dtr_root_volume_size" {
